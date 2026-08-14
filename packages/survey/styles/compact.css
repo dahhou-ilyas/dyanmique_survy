@@ -1,0 +1,32 @@
+/**
+ * Variante dense — sondages longs, écrans chargés, back-office.
+ *
+ *   import '@edb/survey/themes/compact.css';
+ *
+ * Ne redéfinit que des jetons : aucun sélecteur du thème par défaut n'est surchargé.
+ */
+@import './default.css';
+
+.edbs-root {
+  --edbs-font-size-md: 0.875rem;
+  --edbs-font-size-lg: 1rem;
+  --edbs-font-size-xl: 1.1875rem;
+  --edbs-font-size-2xl: 1.5rem;
+
+  --edbs-question-gap: var(--edbs-space-4);
+  --edbs-control-height: 2.25rem;
+  --edbs-control-padding-x: var(--edbs-space-2);
+
+  --edbs-radius-md: 6px;
+  --edbs-radius-lg: 8px;
+
+  --edbs-content-max-width: 52rem;
+}
+
+.edbs-root .edbs-choice {
+  padding: var(--edbs-space-2) var(--edbs-space-3);
+}
+
+.edbs-root .edbs-survey {
+  padding: var(--edbs-space-4);
+}

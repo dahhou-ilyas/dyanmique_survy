@@ -1,0 +1,134 @@
+/**
+ * Jetons de conception (design tokens).
+ *
+ * Ils sont posés sur `.edbs-root`, jamais sur `:root` : le package est une
+ * dépendance, il n'a pas à teinter les variables globales de l'application hôte.
+ * Personnaliser une charte revient à redéfinir ces variables — aucun sélecteur
+ * du package n'a besoin d'être surchargé.
+ *
+ *   .edbs-root { --edbs-color-primary: #005f3d; --edbs-radius-md: 4px; }
+ */
+
+.edbs-root {
+  /* ------------------------------- Couleurs ------------------------------- */
+  --edbs-color-primary: #1b4dd8;
+  --edbs-color-primary-hover: #1740b4;
+  --edbs-color-primary-active: #123390;
+  --edbs-color-primary-soft: #eef2ff;
+  --edbs-color-primary-contrast: #ffffff;
+
+  --edbs-color-bg: #ffffff;
+  --edbs-color-surface: #ffffff;
+  --edbs-color-surface-alt: #f7f8fa;
+  --edbs-color-surface-sunken: #eceff4;
+
+  --edbs-color-border: #dde1e8;
+  --edbs-color-border-strong: #bfc6d2;
+
+  --edbs-color-text: #131820;
+  --edbs-color-text-muted: #5a6474;
+  --edbs-color-text-subtle: #828c9b;
+
+  --edbs-color-danger: #c62033;
+  --edbs-color-danger-hover: #a5192a;
+  --edbs-color-danger-soft: #fdf1f2;
+  --edbs-color-success: #0d7048;
+  --edbs-color-success-soft: #eefaf4;
+  --edbs-color-warning: #96560a;
+  --edbs-color-warning-soft: #fdf5e9;
+
+  /* ------------------------------ Typographie ----------------------------- */
+  --edbs-font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+  --edbs-font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --edbs-font-size-xs: 0.75rem;
+  --edbs-font-size-sm: 0.8125rem;
+  --edbs-font-size-md: 0.9375rem;
+  --edbs-font-size-lg: 1.0625rem;
+  --edbs-font-size-xl: 1.375rem;
+  --edbs-font-size-2xl: 1.75rem;
+
+  --edbs-font-weight-normal: 400;
+  --edbs-font-weight-medium: 500;
+  --edbs-font-weight-semibold: 600;
+
+  --edbs-line-height-tight: 1.3;
+  --edbs-line-height-normal: 1.55;
+
+  /* -------------------------------- Espaces ------------------------------- */
+  --edbs-space-1: 0.25rem;
+  --edbs-space-2: 0.5rem;
+  --edbs-space-3: 0.75rem;
+  --edbs-space-4: 1rem;
+  --edbs-space-5: 1.5rem;
+  --edbs-space-6: 2rem;
+  --edbs-space-7: 3rem;
+
+  /* Densité : c'est ce levier que le thème « compact » déplace. */
+  --edbs-question-gap: var(--edbs-space-5);
+  --edbs-control-height: 2.75rem;
+  --edbs-control-padding-x: var(--edbs-space-3);
+
+  /* -------------------------------- Formes -------------------------------- */
+  --edbs-radius-sm: 4px;
+  --edbs-radius-md: 8px;
+  --edbs-radius-lg: 12px;
+  --edbs-radius-pill: 999px;
+
+  --edbs-border-width: 1px;
+
+  --edbs-shadow-1: 0 1px 2px rgba(19, 24, 32, 0.06);
+  --edbs-shadow-2: 0 4px 12px rgba(19, 24, 32, 0.08);
+  --edbs-shadow-3: 0 12px 32px rgba(19, 24, 32, 0.12);
+
+  /* ------------------------------ Interaction ----------------------------- */
+  --edbs-focus-ring-width: 3px;
+  --edbs-focus-ring-color: rgba(27, 77, 216, 0.35);
+  --edbs-transition-fast: 120ms ease;
+  --edbs-transition: 180ms ease;
+
+  /* ------------------------------- Structure ------------------------------ */
+  --edbs-content-max-width: 46rem;
+}
+
+/**
+ * Thème sombre — **opt-in explicite** via `data-edbs-theme="dark"`.
+ * Aucun `prefers-color-scheme` ici : dans une application hôte qui n'a pas de
+ * mode sombre, basculer tout seul produirait un formulaire sombre au milieu
+ * d'une page claire. Le thème `dark-auto.css` est fourni pour qui le souhaite.
+ */
+.edbs-root[data-edbs-theme='dark'] {
+  --edbs-color-primary: #7a9cff;
+  --edbs-color-primary-hover: #93aeff;
+  --edbs-color-primary-active: #6b8dfa;
+  --edbs-color-primary-soft: #1b2440;
+  --edbs-color-primary-contrast: #0d111b;
+
+  --edbs-color-bg: #0d111b;
+  --edbs-color-surface: #141a26;
+  --edbs-color-surface-alt: #1a2130;
+  --edbs-color-surface-sunken: #202839;
+
+  --edbs-color-border: #2b3446;
+  --edbs-color-border-strong: #3d4859;
+
+  --edbs-color-text: #e8ecf3;
+  --edbs-color-text-muted: #a3adbd;
+  --edbs-color-text-subtle: #7c8798;
+
+  --edbs-color-danger: #ff8189;
+  --edbs-color-danger-hover: #ff9aa1;
+  --edbs-color-danger-soft: #2c1a1f;
+  --edbs-color-success: #57cf9b;
+  --edbs-color-success-soft: #12281f;
+  --edbs-color-warning: #e3a458;
+  --edbs-color-warning-soft: #2a2116;
+
+  --edbs-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --edbs-shadow-2: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --edbs-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --edbs-focus-ring-color: rgba(122, 156, 255, 0.4);
+}

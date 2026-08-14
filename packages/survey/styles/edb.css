@@ -1,0 +1,30 @@
+/**
+ * Gabarit de charte bancaire.
+ *
+ *   import '@edb/survey/themes/edb.css';
+ *
+ * Ce fichier montre l'étendue de ce qu'une charte a besoin de redéfinir :
+ * une poignée de jetons, jamais un sélecteur. Remplacez les valeurs ci-dessous
+ * par celles de la charte réelle — ou, plus simplement, copiez ce bloc dans la
+ * feuille de styles de l'application hôte et n'importez que `default.css`.
+ */
+@import './default.css';
+
+.edbs-root {
+  /* Bleu institutionnel — à remplacer par la couleur de marque. */
+  --edbs-color-primary: #00539b;
+  --edbs-color-primary-hover: #004480;
+  --edbs-color-primary-active: #003765;
+  --edbs-color-primary-soft: #e8f1f9;
+  --edbs-color-primary-contrast: #ffffff;
+
+  --edbs-focus-ring-color: rgba(0, 83, 155, 0.35);
+
+  /* Angles plus francs : registre visuel plus institutionnel. */
+  --edbs-radius-sm: 2px;
+  --edbs-radius-md: 4px;
+  --edbs-radius-lg: 6px;
+
+  --edbs-font-family:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}

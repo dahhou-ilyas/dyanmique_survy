@@ -37,14 +37,6 @@ export function satisfactionSurvey(): SurveyDefinition {
     calculatedValues: [
       { name: 'estDetracteur', expression: '{recommandation} < 7', includeIntoResult: true },
     ],
-    triggers: [
-      {
-        type: 'setvalue',
-        expression: '{satisfaction} >= 4',
-        setToName: 'commentaire',
-        setValue: '',
-      },
-    ],
     pages: [
       {
         id: 'p1',

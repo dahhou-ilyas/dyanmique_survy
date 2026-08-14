@@ -1,0 +1,46 @@
+/**
+ * Variante du thème par défaut qui suit la préférence système.
+ *
+ *   import '@edb/survey/themes/dark-auto.css';
+ *
+ * À n'utiliser que si l'application hôte gère elle aussi le mode sombre : sinon,
+ * le sondage passerait en sombre au milieu d'une page restée claire.
+ * `data-edbs-theme="light"` sur le conteneur force le clair malgré la préférence.
+ */
+@import './default.css';
+
+@media (prefers-color-scheme: dark) {
+  .edbs-root:not([data-edbs-theme='light']) {
+    --edbs-color-primary: #7a9cff;
+    --edbs-color-primary-hover: #93aeff;
+    --edbs-color-primary-active: #6b8dfa;
+    --edbs-color-primary-soft: #1b2440;
+    --edbs-color-primary-contrast: #0d111b;
+
+    --edbs-color-bg: #0d111b;
+    --edbs-color-surface: #141a26;
+    --edbs-color-surface-alt: #1a2130;
+    --edbs-color-surface-sunken: #202839;
+
+    --edbs-color-border: #2b3446;
+    --edbs-color-border-strong: #3d4859;
+
+    --edbs-color-text: #e8ecf3;
+    --edbs-color-text-muted: #a3adbd;
+    --edbs-color-text-subtle: #7c8798;
+
+    --edbs-color-danger: #ff8189;
+    --edbs-color-danger-hover: #ff9aa1;
+    --edbs-color-danger-soft: #2c1a1f;
+    --edbs-color-success: #57cf9b;
+    --edbs-color-success-soft: #12281f;
+    --edbs-color-warning: #e3a458;
+    --edbs-color-warning-soft: #2a2116;
+
+    --edbs-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --edbs-shadow-2: 0 4px 12px rgba(0, 0, 0, 0.45);
+    --edbs-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+    --edbs-focus-ring-color: rgba(122, 156, 255, 0.4);
+  }
+}

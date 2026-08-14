@@ -60,6 +60,13 @@ export interface QuestionSnapshot {
   showErrors: boolean;
   /** Options restant après application de `choicesVisibleIf` et des filtres par option. */
   visibleChoices: Choice[];
+  /**
+   * Numéro d'affichage, ou `undefined` si la numérotation est désactivée.
+   * Calculé ici plutôt que dans le rendu : la numérotation dépend de la visibilité
+   * de *toutes* les questions, et la porter dans l'instantané évite de re-rendre
+   * la page entière à chaque frappe pour la recalculer.
+   */
+  number: number | undefined;
 }
 
 export interface PanelSnapshot {
@@ -79,7 +86,9 @@ export interface SurveyState {
   completed: boolean;
   /** Progression 0 → 1, sur les seules pages visibles. */
   progress: number;
-  /** Vrai si au moins une question visible de la page courante est en erreur. */
+  /** Nombre de questions visibles en erreur sur la page courante. */
+  currentPageErrorCount: number;
+  /** Raccourci sur `currentPageErrorCount > 0`. */
   currentPageHasErrors: boolean;
   /** Incrémenté à chaque changement — repère de débogage, pas une clé de rendu. */
   version: number;
@@ -110,6 +119,15 @@ interface OwnExpressionResults {
   enabled: boolean;
   required: boolean;
   visibleChoices: Choice[];
+}
+
+/** État d'une question après cascade, prêt à devenir un instantané. */
+interface ComputedQuestionState {
+  visible: boolean;
+  enabled: boolean;
+  required: boolean;
+  visibleChoices: Choice[];
+  number: number | undefined;
 }
 
 const MAX_TRIGGER_PASSES = 10;
@@ -296,9 +314,13 @@ export class SurveyEngine {
    * masquée lorsque son groupe parent le devient.
    */
   private cascadeAndSnapshot(): void {
+    const numbering = this.definition.settings.showQuestionNumbers;
+    const counter = { value: 0 };
+
     for (const page of this.definition.pages) {
+      if (numbering === 'onPage') counter.value = 0;
       const pageVisible = this.pageVisibility.get(page.id) ?? true;
-      this.cascadeElements(page.elements, pageVisible, this.mode === 'edit');
+      this.cascadeElements(page.elements, pageVisible, this.mode === 'edit', counter);
     }
   }
 
@@ -306,6 +328,7 @@ export class SurveyEngine {
     elements: Array<Question | Panel>,
     parentVisible: boolean,
     parentEnabled: boolean,
+    counter: { value: number },
   ): void {
     for (const element of elements) {
       const own = this.ownResults.get(element.id) ?? {
@@ -319,8 +342,20 @@ export class SurveyEngine {
 
       if (isPanel(element)) {
         this.setPanelSnapshot(element, visible, enabled);
-        this.cascadeElements(element.elements, visible, enabled);
+        this.cascadeElements(element.elements, visible, enabled, counter);
         continue;
+      }
+
+      // Seules les questions visibles portant une réponse sont numérotées :
+      // un bloc de contenu ou une question masquée ne doit pas créer de trou.
+      let number: number | undefined;
+      if (
+        this.definition.settings.showQuestionNumbers !== 'off' &&
+        visible &&
+        this.registry.get(element.type)?.hasValue === true
+      ) {
+        counter.value += 1;
+        number = counter.value;
       }
 
       this.setQuestionSnapshot(element, {
@@ -328,6 +363,7 @@ export class SurveyEngine {
         enabled: enabled && element.readOnly !== true,
         required: own.required,
         visibleChoices: own.visibleChoices,
+        number,
       });
     }
   }
@@ -344,13 +380,7 @@ export class SurveyEngine {
     return pageId !== undefined && this.validatedPages.has(pageId);
   }
 
-  private setQuestionSnapshot(
-    question: Question,
-    computed: Omit<OwnExpressionResults, 'visible' | 'enabled'> & {
-      visible: boolean;
-      enabled: boolean;
-    },
-  ): void {
+  private setQuestionSnapshot(question: Question, computed: ComputedQuestionState): void {
     const candidate: QuestionSnapshot = {
       question,
       value: this.data[question.name],
@@ -360,6 +390,7 @@ export class SurveyEngine {
       errors: this.errors[question.name] ?? [],
       showErrors: this.shouldShowErrors(question),
       visibleChoices: computed.visibleChoices,
+      number: computed.number,
     };
 
     const previous = this.questionSnapshots.get(question.name);
@@ -384,6 +415,7 @@ export class SurveyEngine {
       this.currentPageIndex = Math.max(0, visiblePages.length - 1);
     }
     const currentPage = visiblePages[this.currentPageIndex] ?? null;
+    const errorCount = currentPage ? this.pageQuestionsInError(currentPage).length : 0;
 
     this.version += 1;
     this.state = {
@@ -401,7 +433,8 @@ export class SurveyEngine {
           : this.completed
             ? 1
             : this.currentPageIndex / visiblePages.length,
-      currentPageHasErrors: currentPage ? this.pageQuestionsInError(currentPage).length > 0 : false,
+      currentPageErrorCount: errorCount,
+      currentPageHasErrors: errorCount > 0,
       version: this.version,
     };
   }
@@ -495,19 +528,31 @@ export class SurveyEngine {
   /* Écriture                                                            */
   /* ------------------------------------------------------------------ */
 
-  setValue(name: string, rawValue: unknown): void {
+  /** Applique la normalisation du descripteur de type à une valeur brute de champ. */
+  private normalize(name: string, rawValue: unknown): unknown {
     const question = this.questionsByName.get(name);
-    const descriptor = question ? this.registry.get(question.type) : undefined;
-    const value =
-      descriptor?.normalizeValue && question
-        ? descriptor.normalizeValue(rawValue, question)
-        : rawValue;
+    if (!question) return rawValue;
+    const descriptor = this.registry.get(question.type);
+    return descriptor?.normalizeValue ? descriptor.normalizeValue(rawValue, question) : rawValue;
+  }
 
-    const previousValue = this.data[name];
-    if (Object.is(previousValue, value)) return;
-
+  /**
+   * Écrit une réponse normalisée. Renvoie `false` si rien n'a bougé.
+   * Toutes les écritures passent par ici — saisie utilisateur comme déclencheurs —
+   * pour qu'une valeur posée par une règle soit typée comme une valeur saisie.
+   */
+  private writeValue(name: string, rawValue: unknown): boolean {
+    const value = this.normalize(name, rawValue);
+    if (Object.is(this.data[name], value)) return false;
     if (value === undefined) delete this.data[name];
     else this.data[name] = value;
+    return true;
+  }
+
+  setValue(name: string, rawValue: unknown): void {
+    const previousValue = this.data[name];
+    if (!this.writeValue(name, rawValue)) return;
+    const value = this.data[name];
 
     this.touched.add(name);
     this.recomputeFor([name]);
@@ -521,15 +566,7 @@ export class SurveyEngine {
   setValues(values: Record<string, unknown>): void {
     const changed: string[] = [];
     for (const [name, rawValue] of Object.entries(values)) {
-      const question = this.questionsByName.get(name);
-      const descriptor = question ? this.registry.get(question.type) : undefined;
-      const value =
-        descriptor?.normalizeValue && question
-          ? descriptor.normalizeValue(rawValue, question)
-          : rawValue;
-      if (Object.is(this.data[name], value)) continue;
-      if (value === undefined) delete this.data[name];
-      else this.data[name] = value;
+      if (!this.writeValue(name, rawValue)) continue;
       this.touched.add(name);
       changed.push(name);
     }
@@ -587,6 +624,7 @@ export class SurveyEngine {
         enabled: snapshot.enabled,
         required: snapshot.required,
         visibleChoices: snapshot.visibleChoices,
+        number: snapshot.number,
       });
     }
   }
@@ -625,6 +663,7 @@ export class SurveyEngine {
         enabled: snapshot.enabled,
         required: snapshot.required,
         visibleChoices: snapshot.visibleChoices,
+        number: snapshot.number,
       });
     }
     return this.pageQuestionsInError(page).length === 0;
@@ -745,18 +784,15 @@ export class SurveyEngine {
 
         switch (trigger.type) {
           case 'setvalue': {
-            if (Object.is(this.data[trigger.setToName], trigger.setValue)) break;
-            if (trigger.setValue === undefined) delete this.data[trigger.setToName];
-            else this.data[trigger.setToName] = trigger.setValue;
-            cascaded.push(trigger.setToName);
+            if (this.writeValue(trigger.setToName, trigger.setValue)) {
+              cascaded.push(trigger.setToName);
+            }
             break;
           }
           case 'copyvalue': {
-            const source = this.data[trigger.fromName];
-            if (Object.is(this.data[trigger.setToName], source)) break;
-            if (source === undefined) delete this.data[trigger.setToName];
-            else this.data[trigger.setToName] = source;
-            cascaded.push(trigger.setToName);
+            if (this.writeValue(trigger.setToName, this.data[trigger.fromName])) {
+              cascaded.push(trigger.setToName);
+            }
             break;
           }
           case 'skip': {
@@ -867,6 +903,7 @@ function sameQuestionSnapshot(left: QuestionSnapshot, right: QuestionSnapshot): 
     left.required === right.required &&
     left.showErrors === right.showErrors &&
     sameErrors(left.errors, right.errors) &&
+    left.number === right.number &&
     sameChoices(left.visibleChoices, right.visibleChoices)
   );
 }
