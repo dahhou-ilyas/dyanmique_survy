@@ -1,4 +1,3 @@
-import { cpSync, mkdirSync } from 'node:fs';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -19,9 +18,5 @@ export default defineConfig({
   external: ['react', 'react-dom', 'react/jsx-runtime'],
   esbuildOptions(options) {
     options.jsx = 'automatic';
-  },
-  async onSuccess() {
-    mkdirSync('dist/themes', { recursive: true });
-    cpSync('styles', 'dist/themes', { recursive: true });
   },
 });

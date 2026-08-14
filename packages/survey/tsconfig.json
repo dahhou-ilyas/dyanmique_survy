@@ -3,6 +3,9 @@
   "compilerOptions": {
     "rootDir": ".",
     "noEmit": true,
+    // tsup injecte `baseUrl` dans le tsconfig temporaire de la génération des
+    // déclarations ; TypeScript 6 le déprécie. À retirer quand tsup aura suivi.
+    "ignoreDeprecations": "6.0",
     "types": ["vitest/globals", "node"]
   },
   "include": ["src", "tests", "tsup.config.ts", "vitest.config.ts"]

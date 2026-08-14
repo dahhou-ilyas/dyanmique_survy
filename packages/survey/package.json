@@ -13,24 +13,20 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
     },
     "./core": {
-      "types": "./dist/core.d.ts",
-      "import": "./dist/core.js",
-      "require": "./dist/core.cjs"
+      "import": { "types": "./dist/core.d.ts", "default": "./dist/core.js" },
+      "require": { "types": "./dist/core.d.cts", "default": "./dist/core.cjs" }
     },
     "./runtime": {
-      "types": "./dist/runtime.d.ts",
-      "import": "./dist/runtime.js",
-      "require": "./dist/runtime.cjs"
+      "import": { "types": "./dist/runtime.d.ts", "default": "./dist/runtime.js" },
+      "require": { "types": "./dist/runtime.d.cts", "default": "./dist/runtime.cjs" }
     },
     "./builder": {
-      "types": "./dist/builder.d.ts",
-      "import": "./dist/builder.js",
-      "require": "./dist/builder.cjs"
+      "import": { "types": "./dist/builder.d.ts", "default": "./dist/builder.js" },
+      "require": { "types": "./dist/builder.d.cts", "default": "./dist/builder.cjs" }
     },
     "./themes/*.css": "./dist/themes/*.css",
     "./package.json": "./package.json"
@@ -38,8 +34,18 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "core": ["./dist/core.d.ts"],
+      "runtime": ["./dist/runtime.d.ts"],
+      "builder": ["./dist/builder.d.ts"]
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/copy-styles.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
