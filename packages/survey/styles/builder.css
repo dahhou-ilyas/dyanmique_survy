@@ -1,0 +1,10 @@
+/**
+ * Thème du builder — inclut le thème du moteur de rendu, dont l'aperçu a besoin.
+ *
+ *   import '@edb/survey/themes/builder.css';
+ *
+ * À importer dans le back-office uniquement. L'application qui affiche les
+ * sondages se contente de `themes/default.css`.
+ */
+@import './default.css';
+@import './_builder.css';

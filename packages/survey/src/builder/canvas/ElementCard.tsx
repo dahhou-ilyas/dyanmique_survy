@@ -70,7 +70,7 @@ export function ElementCard({ element, pageId }: ElementCardProps): ReactNode {
             </span>
           </span>
           <span className="edbs-card__badges">
-            {!panel && element.isRequired && (
+            {!panel && 'isRequired' in element && element.isRequired && (
               <span className="edbs-badge edbs-badge--required">{t('requiredBadge')}</span>
             )}
             {element.visibleIf && (

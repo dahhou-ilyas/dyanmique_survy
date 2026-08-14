@@ -8,24 +8,28 @@ export function PageTabs(): ReactNode {
   const currentPageId = useBuilder((state) => state.currentPageId);
 
   return (
-    <div className="edbs-pagetabs" role="tablist" aria-label={t('pages')}>
-      {pages.map((page, index) => {
-        const active = page.id === currentPageId;
-        const label = text(page.title) || page.name;
-        return (
-          <button
-            key={page.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            className={`edbs-pagetab${active ? ' edbs-pagetab--active' : ''}`}
-            onClick={() => store.getState().setCurrentPage(page.id)}
-          >
-            <span className="edbs-pagetab__index">{index + 1}</span>
-            <span className="edbs-pagetab__label">{label}</span>
-          </button>
-        );
-      })}
+    // Les boutons d'ajout et de suppression restent **hors** du `tablist` :
+    // un conteneur `tablist` ne doit contenir que des éléments `tab`.
+    <div className="edbs-pagetabs">
+      <div className="edbs-pagetabs__list" role="tablist" aria-label={t('pages')}>
+        {pages.map((page, index) => {
+          const active = page.id === currentPageId;
+          const label = text(page.title) || page.name;
+          return (
+            <button
+              key={page.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              className={`edbs-pagetab${active ? ' edbs-pagetab--active' : ''}`}
+              onClick={() => store.getState().setCurrentPage(page.id)}
+            >
+              <span className="edbs-pagetab__index">{index + 1}</span>
+              <span className="edbs-pagetab__label">{label}</span>
+            </button>
+          );
+        })}
+      </div>
 
       <button
         type="button"

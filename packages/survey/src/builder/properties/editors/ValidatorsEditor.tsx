@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { resolveText, setLocalizedText } from '../../../core/localization/resolveText';
+import { resolveEditableText, setLocalizedText } from '../../../core/localization/resolveText';
 import type { LocalizedString, Validator, ValidatorType } from '../../../core/schema/types';
 import { useBuilderContext } from '../../BuilderProvider';
 import { PlusIcon, TrashIcon } from '../../icons';
@@ -175,7 +175,7 @@ export function ValidatorsEditor({ value, onChange }: EditorProps): ReactNode {
             type="text"
             placeholder={t('customMessage')}
             aria-label={`${t('customMessage')} ${index + 1}`}
-            value={resolveText(validator.text, locale)}
+            value={resolveEditableText(validator.text, locale)}
             onChange={(event) => {
               const next = setLocalizedText(
                 validator.text as LocalizedString | undefined,

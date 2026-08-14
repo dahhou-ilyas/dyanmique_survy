@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { resolveText, setLocalizedText } from '../../../core/localization/resolveText';
+import { resolveEditableText, setLocalizedText } from '../../../core/localization/resolveText';
 import type { Choice, LocalizedString } from '../../../core/schema/types';
 import { useBuilderContext } from '../../BuilderProvider';
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon, TrashIcon } from '../../icons';
@@ -44,7 +44,7 @@ export function ChoicesEditor({ value, onChange }: EditorProps): ReactNode {
     setBulkText(
       choices
         .map((choice) => {
-          const label = resolveText(choice.text, locale);
+          const label = resolveEditableText(choice.text, locale);
           return label === '' || label === String(choice.value)
             ? String(choice.value)
             : `${String(choice.value)} | ${label}`;
@@ -77,6 +77,7 @@ export function ChoicesEditor({ value, onChange }: EditorProps): ReactNode {
         <p className="edbs-field__hint">{t('bulkEditHint')}</p>
         <textarea
           className="edbs-textarea"
+          aria-label={t('bulkEdit')}
           rows={Math.max(6, Math.min(20, bulkText.split('\n').length + 1))}
           value={bulkText}
           onChange={(event) => setBulkText(event.target.value)}
@@ -112,7 +113,7 @@ export function ChoicesEditor({ value, onChange }: EditorProps): ReactNode {
             <input
               className="edbs-input"
               type="text"
-              value={resolveText(choice.text, locale)}
+              value={resolveEditableText(choice.text, locale)}
               aria-label={`${t('choiceLabel')} ${index + 1}`}
               onChange={(event) => {
                 const next = setLocalizedText(

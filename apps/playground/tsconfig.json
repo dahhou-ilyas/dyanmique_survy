@@ -2,7 +2,17 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    // `paths` sans `baseUrl` : les chemins sont résolus relativement à ce fichier,
+    // et `baseUrl` est déprécié depuis TypeScript 6.
+    // Ils reflètent les alias de `vite.config.ts` : en développement, le
+    // bac à sable tape dans les sources du package, sans build intermédiaire.
+    "paths": {
+      "@edb/survey/core": ["../../packages/survey/src/core/index.ts"],
+      "@edb/survey/runtime": ["../../packages/survey/src/runtime/index.ts"],
+      "@edb/survey/builder": ["../../packages/survey/src/builder/index.ts"],
+      "@edb/survey": ["../../packages/survey/src/index.ts"]
+    }
   },
   "include": ["src", "vite.config.ts"]
 }

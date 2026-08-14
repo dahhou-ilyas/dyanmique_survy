@@ -35,6 +35,7 @@ export {
 
 export {
   isLocalizedTextEmpty,
+  resolveEditableText,
   resolveText,
   resolveTextOrUndefined,
   setLocalizedText,

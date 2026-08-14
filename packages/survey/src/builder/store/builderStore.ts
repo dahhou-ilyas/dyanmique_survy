@@ -300,9 +300,9 @@ export function createBuilderStore(initial: SurveyDefinition): BuilderStoreApi {
           if (!location) return;
           for (const [key, value] of Object.entries(changes)) {
             if (value === undefined) {
-              delete (location.element as Record<string, unknown>)[key];
+              delete (location.element as unknown as Record<string, unknown>)[key];
             } else {
-              (location.element as Record<string, unknown>)[key] = value;
+              (location.element as unknown as Record<string, unknown>)[key] = value;
             }
           }
         }),

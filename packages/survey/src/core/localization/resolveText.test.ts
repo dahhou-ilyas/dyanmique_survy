@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   isLocalizedTextEmpty,
+  resolveEditableText,
   resolveText,
   resolveTextOrUndefined,
   setLocalizedText,
@@ -42,6 +43,26 @@ describe('resolveTextOrUndefined', () => {
     expect(resolveTextOrUndefined(undefined, 'fr')).toBeUndefined();
     expect(resolveTextOrUndefined({}, 'fr')).toBeUndefined();
     expect(resolveTextOrUndefined('x', 'fr')).toBe('x');
+  });
+});
+
+describe('resolveEditableText', () => {
+  it('renvoie une chaîne nue telle quelle', () => {
+    expect(resolveEditableText('Bonjour', 'en')).toBe('Bonjour');
+  });
+
+  it('ne retombe jamais sur une autre langue', () => {
+    // C'est la différence avec `resolveText` : vider le champ français ne doit
+    // pas y faire apparaître le texte anglais, sans quoi la frappe s'y ajoute.
+    expect(resolveEditableText({ en: 'Hello' }, 'fr')).toBe('');
+  });
+
+  it('accepte `default` comme valeur de la langue courante', () => {
+    expect(resolveEditableText({ default: 'Bonjour' }, 'fr')).toBe('Bonjour');
+  });
+
+  it('préfère la traduction exacte à `default`', () => {
+    expect(resolveEditableText({ default: 'Bonjour', en: 'Hello' }, 'en')).toBe('Hello');
   });
 });
 

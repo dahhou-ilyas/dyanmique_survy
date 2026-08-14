@@ -32,6 +32,23 @@ export function resolveTextOrUndefined(
   return resolved === '' ? undefined : resolved;
 }
 
+/**
+ * Texte destiné à un **champ d'édition**, sans repli sur une autre langue.
+ *
+ * `resolveText` retombe volontiers sur une traduction voisine, ce qui est juste à
+ * l'affichage mais faux dans un éditeur : vider le champ français y ferait
+ * apparaître le texte anglais, et la frappe suivante s'y ajouterait. Une chaîne
+ * nue est en revanche renvoyée telle quelle — c'est l'unique texte du sondage.
+ */
+export function resolveEditableText(
+  text: LocalizedString | undefined,
+  locale: Locale,
+): string {
+  if (text === undefined || text === null) return '';
+  if (typeof text === 'string') return text;
+  return text[locale] ?? text.default ?? '';
+}
+
 /** Normalise en table de traductions ; une chaîne nue devient la valeur `default`. */
 export function toLocalizedMap(text: LocalizedString | undefined): LocalizedMap {
   if (text === undefined || text === null) return {};

@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { minimalSurvey, satisfactionSurvey } from '../../tests/fixtures';
+import { firstQuestion, minimalSurvey, satisfactionSurvey } from '../../tests/fixtures';
 import { createQuestion, createSurvey } from '../core/schema/defaults';
 import type { SurveyDefinition } from '../core/schema/types';
 import { SurveyRenderer } from './SurveyRenderer';
@@ -214,7 +214,7 @@ describe('groupes', () => {
   it('rend un groupe repliable et bascule son contenu', async () => {
     const user = userEvent.setup();
     const survey = satisfactionSurvey();
-    survey.pages[0]!.elements[0]!.isRequired = false;
+    firstQuestion(survey).isRequired = false;
     renderSurvey(survey);
 
     await user.click(screen.getByRole('button', { name: /Suivant/ }));

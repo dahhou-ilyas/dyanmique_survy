@@ -141,7 +141,7 @@ function PropertyGroups({
 /* -------------------------------------------------------------------------- */
 
 function ElementProperties({ elementId }: { elementId: string }): ReactNode {
-  const { registry, store, t } = useBuilderContext();
+  const { registry, store } = useBuilderContext();
   const element = useBuilder((state) => findElementById(state.survey, elementId)?.element);
 
   if (!element) return <EmptySelection />;
@@ -171,7 +171,6 @@ function ElementProperties({ elementId }: { elementId: string }): ReactNode {
           store.getState().updateElement(elementId, { [name]: value });
         }}
       />
-      <p className="edbs-field__hint">{t('noSelectionHint')}</p>
     </>
   );
 }

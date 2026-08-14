@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import { resolveText, setLocalizedText } from '../../../core/localization/resolveText';
+import { resolveEditableText, setLocalizedText } from '../../../core/localization/resolveText';
 import type { LocalizedString } from '../../../core/schema/types';
 import type { PropertyDescriptor } from '../../../core/registry/types';
 import { useBuilderContext } from '../../BuilderProvider';
@@ -39,7 +39,7 @@ export function LocalizedTextEditor({
   multiline = false,
 }: EditorProps & { multiline?: boolean }): ReactNode {
   const { locale, text } = useBuilderContext();
-  const current = resolveText(value as LocalizedString | undefined, locale);
+  const current = resolveEditableText(value as LocalizedString | undefined, locale);
   const placeholder = text(property.placeholder) || undefined;
 
   const handle = (next: string): void => {
