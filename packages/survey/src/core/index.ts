@@ -105,6 +105,25 @@ export {
 } from './expressions/values';
 
 export {
+  SurveyEngine,
+  type PageChangedEvent,
+  type PanelSnapshot,
+  type QuestionSnapshot,
+  type SurveyEngineOptions,
+  type SurveyEventName,
+  type SurveyMode,
+  type SurveyState,
+  type ValueChangedEvent,
+} from './engine/SurveyEngine';
+export {
+  affectedBy,
+  buildDependencyGraph,
+  type AffectedTargets,
+  type DependencyGraph,
+  type Dependents,
+} from './engine/dependencyGraph';
+
+export {
   validateQuestion,
   type ValidateQuestionOptions,
   type ValidationError,

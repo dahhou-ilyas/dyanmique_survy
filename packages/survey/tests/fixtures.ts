@@ -1,4 +1,21 @@
-import { CURRENT_SCHEMA_VERSION, type SurveyDefinition } from '../src/core/schema/types';
+import {
+  isPanel,
+  CURRENT_SCHEMA_VERSION,
+  type Question,
+  type SurveyDefinition,
+} from '../src/core/schema/types';
+
+/**
+ * Première question de la première page, typée comme telle.
+ * Renvoie la référence vivante : la muter modifie bien le sondage.
+ */
+export function firstQuestion(survey: SurveyDefinition): Question {
+  const element = survey.pages[0]?.elements[0];
+  if (!element || isPanel(element)) {
+    throw new Error('Le sondage de test ne commence pas par une question.');
+  }
+  return element;
+}
 
 /**
  * Sondage de satisfaction couvrant les cas structurants : plusieurs pages,
