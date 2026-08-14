@@ -17,6 +17,7 @@ export function ProgressBar(): ReactNode {
       <div
         className="edbs-progress__track"
         role="progressbar"
+        aria-label={t('pageProgress', { current, total })}
         aria-valuemin={0}
         aria-valuemax={total}
         aria-valuenow={current}

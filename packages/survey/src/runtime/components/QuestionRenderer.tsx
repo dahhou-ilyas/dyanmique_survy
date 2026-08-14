@@ -1,4 +1,5 @@
 import { memo, type ReactNode } from 'react';
+import type { LocalizedString } from '../../core/schema/types';
 import type { ValidationError } from '../../core/validation/validators';
 import type { Translate } from '../../i18n/messages';
 import { useSurveyContext } from '../SurveyProvider';
@@ -10,7 +11,7 @@ import { ErrorIcon } from './ui/icons';
 function errorMessage(
   error: ValidationError,
   t: Translate,
-  text: (value: unknown) => string,
+  text: (value: LocalizedString | undefined) => string,
 ): string {
   if (error.customText) {
     const custom = text(error.customText);
@@ -65,46 +66,33 @@ export const QuestionRenderer = memo(function QuestionRenderer({
   const isContentBlock = question.type === 'html';
   const grouped = usesGroupSemantics(question);
 
-  const header = isContentBlock ? null : (
-    <div className="edbs-question__header">
-      {grouped ? (
-        <legend className="edbs-question__label">
-          <LabelContent number={snapshot.number} label={label} required={snapshot.required} t={t} />
-        </legend>
-      ) : (
-        <label className="edbs-question__label" htmlFor={fieldId}>
-          <LabelContent number={snapshot.number} label={label} required={snapshot.required} t={t} />
-        </label>
-      )}
-      {description !== '' && (
-        <p id={descriptionId} className="edbs-question__description">
-          {description}
-        </p>
-      )}
+  const labelContent = (
+    <LabelContent number={snapshot.number} label={label} required={snapshot.required} t={t} />
+  );
+
+  const descriptionNode = description !== '' && (
+    <p id={descriptionId} className="edbs-question__description">
+      {description}
+    </p>
+  );
+
+  const control = (
+    <div className="edbs-question__control">
+      <Field
+        snapshot={snapshot}
+        question={question}
+        id={fieldId}
+        describedBy={describedBy}
+        onChange={(value) => engine.setValue(name, value)}
+      />
     </div>
   );
 
-  const body = (
-    <>
-      {header}
-      <div className="edbs-question__control">
-        <Field
-          snapshot={snapshot}
-          question={question}
-          id={fieldId}
-          describedBy={describedBy}
-          onChange={(value) => engine.setValue(name, value)}
-        />
-      </div>
-      {showErrors && (
-        <div id={errorId} className="edbs-question__error" role="alert">
-          <ErrorIcon className="edbs-question__error-icon" />
-          <span>
-            {snapshot.errors.map((error) => errorMessage(error, t, text)).join(' ')}
-          </span>
-        </div>
-      )}
-    </>
+  const errorNode = showErrors && (
+    <div id={errorId} className="edbs-question__error" role="alert">
+      <ErrorIcon className="edbs-question__error-icon" />
+      <span>{snapshot.errors.map((error) => errorMessage(error, t, text)).join(' ')}</span>
+    </div>
   );
 
   const className =
@@ -114,13 +102,32 @@ export const QuestionRenderer = memo(function QuestionRenderer({
 
   // `data-edbs-question` sert de point d'ancrage au déplacement du focus vers
   // la première question en erreur.
-  return grouped ? (
-    <fieldset className={`${className} edbs-fieldset`} data-edbs-question={name}>
-      {body}
-    </fieldset>
-  ) : (
+  if (grouped) {
+    // Le `<legend>` doit être le **premier enfant** du `<fieldset>` : c'est la seule
+    // position où le navigateur en fait le nom accessible du groupe. L'envelopper
+    // dans un conteneur, même pour la mise en page, prive le groupe de son libellé.
+    return (
+      <fieldset className={`${className} edbs-fieldset`} data-edbs-question={name}>
+        <legend className="edbs-question__label">{labelContent}</legend>
+        {descriptionNode}
+        {control}
+        {errorNode}
+      </fieldset>
+    );
+  }
+
+  return (
     <div className={className} data-edbs-question={name}>
-      {body}
+      {!isContentBlock && (
+        <div className="edbs-question__header">
+          <label className="edbs-question__label" htmlFor={fieldId}>
+            {labelContent}
+          </label>
+          {descriptionNode}
+        </div>
+      )}
+      {control}
+      {errorNode}
     </div>
   );
 });

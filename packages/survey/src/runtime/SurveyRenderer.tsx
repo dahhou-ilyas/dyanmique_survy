@@ -186,11 +186,11 @@ function SurveyBody({
   showProgressBar,
 }: {
   showCompletePage: boolean;
-  pageAnchorRef: React.RefObject<HTMLDivElement>;
+  pageAnchorRef: RefObject<HTMLDivElement>;
   showPageTitles: boolean;
   showProgressBar: SurveyDefinition['settings']['showProgressBar'];
 }): ReactNode {
-  const { t, text, engine } = useSurveyContextSafe();
+  const { t, text, engine } = useSurveyContext();
   const state = useSurveyState();
   const definition = engine.getDefinition();
 
@@ -204,9 +204,7 @@ function SurveyBody({
 
   const title = text(definition.title);
   const description = text(definition.description);
-  const errorCount = state.currentPage
-    ? Object.keys(engine.getErrors()).length
-    : 0;
+  const errorCount = state.currentPageErrorCount;
 
   return (
     <div className="edbs-survey">
@@ -241,6 +239,3 @@ function SurveyBody({
     </div>
   );
 }
-
-// Import tardif pour éviter un cycle avec `SurveyProvider`.
-import { useSurveyContext as useSurveyContextSafe } from './SurveyProvider';

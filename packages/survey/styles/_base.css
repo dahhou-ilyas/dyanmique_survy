@@ -100,6 +100,12 @@
 /* Page                                                                       */
 /* ========================================================================== */
 
+/* Cible du focus au changement de page : focalisable au clavier programmatique,
+   mais sans contour visible — l'utilisateur n'a pas déclenché ce focus lui-même. */
+.edbs-page__anchor:focus {
+  outline: none;
+}
+
 .edbs-page__title {
   margin: 0 0 var(--edbs-space-2);
   font-size: var(--edbs-font-size-xl);
@@ -190,8 +196,16 @@
 
 .edbs-question__label {
   display: block;
+  /* `<legend>` porte un padding horizontal par défaut : il désalignerait le
+     libellé d'un groupe par rapport à celui d'un champ simple. */
+  padding: 0;
+  margin-bottom: var(--edbs-space-2);
   font-weight: var(--edbs-font-weight-medium);
   line-height: var(--edbs-line-height-tight);
+}
+
+.edbs-question__header .edbs-question__label {
+  margin-bottom: 0;
 }
 
 .edbs-question__number {
@@ -460,9 +474,17 @@
   border-color: var(--edbs-color-primary);
 }
 
+/* Les crans sont des `<label>` enveloppant un `<input type="radio">` masqué :
+   l'anneau de focus doit donc suivre l'input, pas le label. */
+.edbs-rating__item:has(input:focus-visible),
 .edbs-rating__item:focus-visible {
   outline: none;
   box-shadow: 0 0 0 var(--edbs-focus-ring-width) var(--edbs-focus-ring-color);
+}
+
+.edbs-rating__item--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .edbs-rating__item--selected {
