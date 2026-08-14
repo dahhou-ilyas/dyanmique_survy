@@ -1,0 +1,40 @@
+{
+  "name": "sondage-builder",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Monorepo du module de sondage EDB — package @edb/survey (core, runtime, builder, thèmes)",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "build": "pnpm --filter @edb/survey build",
+    "dev": "pnpm --filter playground dev",
+    "test": "pnpm --filter @edb/survey test",
+    "test:watch": "pnpm --filter @edb/survey test:watch",
+    "test:coverage": "pnpm --filter @edb/survey test:coverage",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @edb/survey verify:pkg",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.11.0",
+    "prettier": "^3.9.6",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.67.0"
+  }
+}
