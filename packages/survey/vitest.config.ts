@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 
+// La transformation JSX suit `jsx: "react-jsx"` de tsconfig.base.json, lu par Vite.
 export default defineConfig({
-  esbuild: { jsx: 'automatic' },
   test: {
     globals: true,
     environment: 'jsdom',

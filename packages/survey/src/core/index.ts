@@ -63,6 +63,60 @@ export {
 } from './registry/commonProperties';
 export { OTHER_VALUE, otherCommentKey } from './registry/descriptors/choice';
 export { DEFAULT_RATE_MAX, NPS_MAX, NPS_MIN } from './registry/descriptors/rating';
+export {
+  ExpressionSyntaxError,
+  checkExpression,
+  clearExpressionCache,
+  parseExpression,
+  type ExpressionCheck,
+} from './expressions/parser';
+export {
+  collectFunctionCalls,
+  collectReferences,
+  type BinaryOperator,
+  type ExpressionNode,
+  type PostfixOperator,
+  type UnaryOperator,
+} from './expressions/ast';
+export {
+  evaluateCondition,
+  evaluateExpression,
+  evaluateNode,
+  tryEvaluateExpression,
+  type EvaluationContext,
+} from './expressions/evaluate';
+export {
+  BUILTIN_FUNCTION_NAMES,
+  FUNCTION_SIGNATURES,
+  builtinFunctions,
+  type ExpressionFunction,
+  type FunctionContext,
+} from './expressions/functions';
+export {
+  compareValues,
+  formatIsoDate,
+  isEmpty,
+  looseEquals,
+  toArray,
+  toBoolean,
+  toDate,
+  toNumber,
+  toStringValue,
+} from './expressions/values';
+
+export {
+  validateQuestion,
+  type ValidateQuestionOptions,
+  type ValidationError,
+  type ValidationErrorKey,
+} from './validation/validators';
+export {
+  validateSurveyDefinition,
+  type DiagnosticSeverity,
+  type SurveyDiagnostic,
+  type ValidateSurveyResult,
+} from './validation/validateSurvey';
+
 export type {
   AnyQuestionTypeDescriptor,
   DisplayContext,
