@@ -17,11 +17,7 @@ export {
   type SurveyProviderProps,
 } from './SurveyProvider';
 
-export {
-  usePanelSnapshot,
-  useQuestionSnapshot,
-  useSurveyState,
-} from './hooks/useSurveyEngine';
+export { usePanelSnapshot, useQuestionSnapshot, useSurveyState } from './hooks/useSurveyEngine';
 
 export { defaultFieldComponents, type FieldComponents } from './fieldComponents';
 export { usesGroupSemantics, type FieldProps } from './types';

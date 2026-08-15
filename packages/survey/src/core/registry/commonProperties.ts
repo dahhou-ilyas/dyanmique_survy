@@ -46,7 +46,7 @@ export const VALIDATION_PROPERTIES: PropertyDescriptor[] = [
   },
   {
     name: 'requiredErrorText',
-    label: { fr: "Message si non renseigné", en: 'Required error message' },
+    label: { fr: 'Message si non renseigné', en: 'Required error message' },
     editor: 'localizedText',
     group: 'validation',
     isVisible: (element) => !isPanel(element) && element.isRequired === true,
@@ -65,7 +65,7 @@ export const LOGIC_PROPERTIES: PropertyDescriptor[] = [
     name: 'visibleIf',
     label: { fr: 'Afficher si', en: 'Visible if' },
     description: {
-      fr: "Expression évaluée en continu. Ex. : {satisfaction} <= 2",
+      fr: 'Expression évaluée en continu. Ex. : {satisfaction} <= 2',
       en: 'Continuously evaluated expression. E.g. {satisfaction} <= 2',
     },
     editor: 'expression',

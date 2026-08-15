@@ -90,7 +90,10 @@ export class QuestionRegistry {
   }
 
   /** Descripteurs regroupés par catégorie — alimente directement la palette du builder. */
-  byCategory(): Array<{ category: QuestionCategory; descriptors: QuestionTypeDescriptor<Question>[] }> {
+  byCategory(): Array<{
+    category: QuestionCategory;
+    descriptors: QuestionTypeDescriptor<Question>[];
+  }> {
     const groups = new Map<QuestionCategory, QuestionTypeDescriptor<Question>[]>();
     for (const descriptor of this.descriptors.values()) {
       const bucket = groups.get(descriptor.category) ?? [];

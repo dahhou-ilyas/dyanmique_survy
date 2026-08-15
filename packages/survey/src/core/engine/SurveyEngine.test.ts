@@ -35,8 +35,10 @@ describe('initialisation', () => {
 
   it('évalue la visibilité conditionnelle dès le départ', () => {
     expect(makeEngine().getQuestionSnapshot('commentaire')?.visible).toBe(false);
-    expect(makeEngine(satisfactionSurvey(), { satisfaction: 2 })
-      .getQuestionSnapshot('commentaire')?.visible).toBe(true);
+    expect(
+      makeEngine(satisfactionSurvey(), { satisfaction: 2 }).getQuestionSnapshot('commentaire')
+        ?.visible,
+    ).toBe(true);
   });
 });
 
@@ -445,9 +447,7 @@ describe('getResult', () => {
 
   it('exclut les questions sans réponse', () => {
     const bare = makeEngine(satisfactionSurvey(), { satisfaction: 5 });
-    expect(bare.getResult().answers.map((answer) => answer.questionName)).toEqual([
-      'satisfaction',
-    ]);
+    expect(bare.getResult().answers.map((answer) => answer.questionName)).toEqual(['satisfaction']);
   });
 
   it('n’inclut jamais les blocs de contenu', () => {

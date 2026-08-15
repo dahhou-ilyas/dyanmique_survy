@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { EvaluationContext } from '../expressions/evaluate';
 import { createQuestion } from '../schema/defaults';
-import type { CheckboxQuestion, DateQuestion, NumberQuestion, Question, TextQuestion } from '../schema/types';
+import type {
+  CheckboxQuestion,
+  DateQuestion,
+  NumberQuestion,
+  Question,
+  TextQuestion,
+} from '../schema/types';
 import { validateQuestion } from './validators';
 
 const context = (data: Record<string, unknown> = {}): EvaluationContext => ({ data });

@@ -33,6 +33,18 @@ export {
 
 export { BUILDER_TABS, Toolbar, type BuilderTab, type ToolbarProps } from './layout/Toolbar';
 export { DesignerCanvas } from './canvas/DesignerCanvas';
+export {
+  TOOLBOX_DRAG_PREFIX,
+  isToolboxDrag,
+  resolveDropTarget,
+  toolboxDragType,
+} from './canvas/dropTarget';
+export {
+  decodeContainerId,
+  encodeContainerId,
+  isContainerId,
+  type ContainerId,
+} from './canvas/dragIds';
 export { PropertyGrid } from './properties/PropertyGrid';
 export { ToolboxPanel } from './toolbox/ToolboxPanel';
 export { PreviewPane } from './tabs/PreviewPane';

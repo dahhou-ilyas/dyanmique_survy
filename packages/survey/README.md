@@ -28,13 +28,13 @@ jamais sa propre copie de React.
 
 ## Points d'entrée
 
-| Import | Pour qui | Contenu |
-| --- | --- | --- |
-| `@edb/survey/runtime` | l'application qui **affiche** les sondages | `SurveyRenderer`, hooks, composants de champ |
-| `@edb/survey/builder` | le **back-office** | `SurveyBuilder`, store, éditeurs |
-| `@edb/survey/core` | les deux, et le serveur | modèle, expressions, validation, `SurveyEngine` |
-| `@edb/survey` | commodité | `core` + `runtime` (jamais le builder) |
-| `@edb/survey/themes/*.css` | — | `default`, `builder`, `compact`, `dark-auto`, `edb` |
+| Import                     | Pour qui                                   | Contenu                                             |
+| -------------------------- | ------------------------------------------ | --------------------------------------------------- |
+| `@edb/survey/runtime`      | l'application qui **affiche** les sondages | `SurveyRenderer`, hooks, composants de champ        |
+| `@edb/survey/builder`      | le **back-office**                         | `SurveyBuilder`, store, éditeurs                    |
+| `@edb/survey/core`         | les deux, et le serveur                    | modèle, expressions, validation, `SurveyEngine`     |
+| `@edb/survey`              | commodité                                  | `core` + `runtime` (jamais le builder)              |
+| `@edb/survey/themes/*.css` | —                                          | `default`, `builder`, `compact`, `dark-auto`, `edb` |
 
 Le builder n'est pas ré-exporté depuis la racine : une application qui n'importe que
 `/runtime` ne télécharge ni `@dnd-kit`, ni les éditeurs de propriétés.
@@ -49,8 +49,8 @@ import { SurveyRenderer } from '@edb/survey/runtime';
 import '@edb/survey/themes/default.css';
 
 <SurveyRenderer
-  definition={campagne.definition}          // le JSON stocké en base
-  data={reponsesPartielles}                 // reprise d'un sondage entamé
+  definition={campagne.definition} // le JSON stocké en base
+  data={reponsesPartielles} // reprise d'un sondage entamé
   locale="fr"
   onValueChanged={({ name, value }) => autosave(name, value)}
   onComplete={(result) => api.post('/sondages/reponses', result)}
@@ -75,9 +75,9 @@ import '@edb/survey/themes/default.css';
       "type": "rating",
       "title": "Votre satisfaction globale",
       "value": 2,
-      "displayValue": "2/5"
-    }
-  ]
+      "displayValue": "2/5",
+    },
+  ],
 }
 ```
 
@@ -88,14 +88,14 @@ reste néanmoins en mémoire, pour être restaurée si l'utilisateur revient en 
 
 ### Options utiles
 
-| Prop | Effet |
-| --- | --- |
-| `mode="display"` | tout en lecture seule — relecture d'une réponse en back-office |
-| `theme="dark"` | force le thème sombre sur ce sondage |
-| `messages={{ next: 'Continuer' }}` | surcharge partielle des libellés d'interface |
-| `components={{ ...defaultFieldComponents, signature: MonChamp }}` | ajoute ou remplace un type |
-| `functions={{ soldeClient: () => solde }}` | fonctions d'expression propres à l'hôte |
-| `onEngineReady={(engine) => …}` | accès au moteur (navigation programmatique, sauvegarde partielle) |
+| Prop                                                              | Effet                                                             |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `mode="display"`                                                  | tout en lecture seule — relecture d'une réponse en back-office    |
+| `theme="dark"`                                                    | force le thème sombre sur ce sondage                              |
+| `messages={{ next: 'Continuer' }}`                                | surcharge partielle des libellés d'interface                      |
+| `components={{ ...defaultFieldComponents, signature: MonChamp }}` | ajoute ou remplace un type                                        |
+| `functions={{ soldeClient: () => solde }}`                        | fonctions d'expression propres à l'hôte                           |
+| `onEngineReady={(engine) => …}`                                   | accès au moteur (navigation programmatique, sauvegarde partielle) |
 
 ## Construire un sondage
 
@@ -137,23 +137,35 @@ laisse une porte de sortie dans les deux sens.
     "showProgressBar": "top",
     "showQuestionNumbers": "off",
     "showPageTitles": true,
-    "checkErrorsMode": "onNextPage"
+    "checkErrorsMode": "onNextPage",
   },
   "calculatedValues": [
-    { "name": "estDetracteur", "expression": "{recommandation} < 7", "includeIntoResult": true }
+    { "name": "estDetracteur", "expression": "{recommandation} < 7", "includeIntoResult": true },
   ],
   "pages": [
     {
       "id": "p1",
       "name": "page1",
       "elements": [
-        { "id": "q1", "name": "satisfaction", "type": "rating", "title": "Votre satisfaction",
-          "rateMax": 5, "isRequired": true },
-        { "id": "q2", "name": "commentaire", "type": "comment", "title": "Que dire de plus ?",
-          "visibleIf": "{satisfaction} <= 3", "isRequired": true }
-      ]
-    }
-  ]
+        {
+          "id": "q1",
+          "name": "satisfaction",
+          "type": "rating",
+          "title": "Votre satisfaction",
+          "rateMax": 5,
+          "isRequired": true,
+        },
+        {
+          "id": "q2",
+          "name": "commentaire",
+          "type": "comment",
+          "title": "Que dire de plus ?",
+          "visibleIf": "{satisfaction} <= 3",
+          "isRequired": true,
+        },
+      ],
+    },
+  ],
 }
 ```
 
@@ -259,9 +271,7 @@ questionRegistry.register({
   supportsChoices: false,
   createDefault: (name, id) => ({ id, name, type: 'signature', title: 'Signature' }),
   // Ces propriétés génèrent automatiquement le panneau d'édition du builder.
-  properties: [
-    { name: 'penColor', label: 'Couleur du trait', editor: 'text', group: 'options' },
-  ],
+  properties: [{ name: 'penColor', label: 'Couleur du trait', editor: 'text', group: 'options' }],
   isEmpty: (value) => !value,
   getDisplayValue: (value) => (value ? 'Signé' : ''),
 });
@@ -282,12 +292,12 @@ incomplètes.
 
 Le package ne s'en occupe pas, mais expose les types que le backend doit refléter :
 
-| Élément | Type |
-| --- | --- |
-| Définition d'un sondage (colonne JSON de la campagne) | `SurveyDefinition` |
-| Réponse d'un utilisateur | `SurveyResult` |
-| Contrôle d'un JSON reçu par API | `parseSurvey` / `safeParseSurvey` |
-| Contrôle de conception avant publication | `validateSurveyDefinition` |
+| Élément                                               | Type                              |
+| ----------------------------------------------------- | --------------------------------- |
+| Définition d'un sondage (colonne JSON de la campagne) | `SurveyDefinition`                |
+| Réponse d'un utilisateur                              | `SurveyResult`                    |
+| Contrôle d'un JSON reçu par API                       | `parseSurvey` / `safeParseSurvey` |
+| Contrôle de conception avant publication              | `validateSurveyDefinition`        |
 
 `@edb/survey/core` n'a aucune dépendance à React : ces fonctions s'utilisent telles quelles
 dans un service Node.

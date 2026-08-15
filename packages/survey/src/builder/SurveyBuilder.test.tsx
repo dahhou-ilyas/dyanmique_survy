@@ -54,7 +54,9 @@ describe('ajout et suppression', () => {
     const onChange = vi.fn();
     renderBuilder(satisfactionSurvey(), { onChange });
 
-    await user.click(screen.getByRole('button', { name: /Supprimer : Votre satisfaction globale/ }));
+    await user.click(
+      screen.getByRole('button', { name: /Supprimer : Votre satisfaction globale/ }),
+    );
 
     const survey = onChange.mock.calls.at(-1)![0] as SurveyDefinition;
     expect(survey.pages[0]!.elements).toHaveLength(2);
@@ -65,7 +67,9 @@ describe('ajout et suppression', () => {
     const onChange = vi.fn();
     renderBuilder(satisfactionSurvey(), { onChange });
 
-    await user.click(screen.getByRole('button', { name: /Dupliquer : Votre satisfaction globale/ }));
+    await user.click(
+      screen.getByRole('button', { name: /Dupliquer : Votre satisfaction globale/ }),
+    );
 
     const survey = onChange.mock.calls.at(-1)![0] as SurveyDefinition;
     expect(survey.pages[0]!.elements).toHaveLength(4);

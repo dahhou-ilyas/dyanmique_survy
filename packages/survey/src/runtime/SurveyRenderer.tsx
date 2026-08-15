@@ -224,11 +224,7 @@ function SurveyBody({
       )}
 
       {state.currentPage ? (
-        <PageRenderer
-          ref={pageAnchorRef}
-          page={state.currentPage}
-          showTitle={showPageTitles}
-        />
+        <PageRenderer ref={pageAnchorRef} page={state.currentPage} showTitle={showPageTitles} />
       ) : (
         <p className="edbs-page__description">{t('emptySurvey')}</p>
       )}

@@ -19,9 +19,7 @@ enablePatches();
 
 /** Ce qui est actuellement sélectionné dans le concepteur. */
 export type Selection =
-  | { kind: 'survey' }
-  | { kind: 'page'; id: string }
-  | { kind: 'element'; id: string };
+  { kind: 'survey' } | { kind: 'page'; id: string } | { kind: 'element'; id: string };
 
 /** Destination d'un déplacement ou d'un ajout. */
 export interface DropTarget {
@@ -168,7 +166,8 @@ export function createBuilderStore(initial: SurveyDefinition): BuilderStoreApi {
         if (selection.kind === 'page') set({ currentPageId: selection.id });
       },
 
-      setCurrentPage: (pageId) => set({ currentPageId: pageId, selection: { kind: 'page', id: pageId } }),
+      setCurrentPage: (pageId) =>
+        set({ currentPageId: pageId, selection: { kind: 'page', id: pageId } }),
 
       /* -------------------------------- Pages -------------------------------- */
 

@@ -119,7 +119,8 @@ const fr: BuilderMessages = {
 
   properties: 'Propriétés',
   noSelection: 'Aucune sélection',
-  noSelectionHint: 'Sélectionnez une question, une page ou le sondage pour en modifier les propriétés.',
+  noSelectionHint:
+    'Sélectionnez une question, une page ou le sondage pour en modifier les propriétés.',
   surveyProperties: 'Sondage',
   pageProperties: 'Page',
   surveyTitle: 'Titre du sondage',

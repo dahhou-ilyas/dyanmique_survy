@@ -27,7 +27,12 @@ const RULE_LABELS: Record<string, string> = {
 function collectRows(survey: SurveyDefinition): LogicRow[] {
   const rows: LogicRow[] = [];
 
-  const push = (elementId: string | null, element: string, rule: string, expression?: string): void => {
+  const push = (
+    elementId: string | null,
+    element: string,
+    rule: string,
+    expression?: string,
+  ): void => {
     if (!expression || expression.trim() === '') return;
     rows.push({ elementId, element, rule, expression });
   };
@@ -90,9 +95,7 @@ export function LogicTab(): ReactNode {
                   <button
                     type="button"
                     className="edbs-link"
-                    onClick={() =>
-                      store.getState().select({ kind: 'element', id: row.elementId! })
-                    }
+                    onClick={() => store.getState().select({ kind: 'element', id: row.elementId! })}
                   >
                     {row.element}
                   </button>

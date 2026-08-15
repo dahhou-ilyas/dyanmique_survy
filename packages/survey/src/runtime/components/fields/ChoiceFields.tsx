@@ -66,7 +66,11 @@ export function RadioGroupField({
   const invalid = snapshot.showErrors && snapshot.errors.length > 0;
   const options: Array<Choice & { isOther?: boolean }> = [...snapshot.visibleChoices];
   if (question.hasOther) {
-    options.push({ value: OTHER_VALUE, text: question.otherText ?? t('otherLabel'), isOther: true });
+    options.push({
+      value: OTHER_VALUE,
+      text: question.otherText ?? t('otherLabel'),
+      isOther: true,
+    });
   }
 
   return (
@@ -124,16 +128,20 @@ export function CheckboxField({
 
   const options: Array<Choice & { isOther?: boolean }> = [...snapshot.visibleChoices];
   if (question.hasOther) {
-    options.push({ value: OTHER_VALUE, text: question.otherText ?? t('otherLabel'), isOther: true });
+    options.push({
+      value: OTHER_VALUE,
+      text: question.otherText ?? t('otherLabel'),
+      isOther: true,
+    });
   }
 
   const toggle = (value: Choice['value'], checked: boolean): void => {
     // L'ordre des options du sondage est conservé : le résultat reste lisible
     // quel que soit l'ordre dans lequel l'utilisateur a coché.
     const next = checked
-      ? options.map((choice) => choice.value).filter((candidate) =>
-          candidate === value ? true : selected.includes(candidate),
-        )
+      ? options
+          .map((choice) => choice.value)
+          .filter((candidate) => (candidate === value ? true : selected.includes(candidate)))
       : selected.filter((candidate) => candidate !== value);
     onChange(next);
   };

@@ -3,8 +3,7 @@ import { BUILTIN_FUNCTION_NAMES, FUNCTION_SIGNATURES, builtinFunctions } from '.
 
 const CONTEXT = { now: new Date('2026-06-15T12:00:00Z') };
 
-const call = (name: string, ...args: unknown[]): unknown =>
-  builtinFunctions[name]!(args, CONTEXT);
+const call = (name: string, ...args: unknown[]): unknown => builtinFunctions[name]!(args, CONTEXT);
 
 describe('intervalles de date', () => {
   it.each([
@@ -54,9 +53,12 @@ describe('composants de date', () => {
     expect(call('now')).toBe('2026-06-15T12:00:00.000Z');
   });
 
-  it.each(['year', 'month', 'day', 'weekday'])('%s renvoie undefined sur une date invalide', (name) => {
-    expect(call(name, 'nawak')).toBeUndefined();
-  });
+  it.each(['year', 'month', 'day', 'weekday'])(
+    '%s renvoie undefined sur une date invalide',
+    (name) => {
+      expect(call(name, 'nawak')).toBeUndefined();
+    },
+  );
 });
 
 describe('âge', () => {

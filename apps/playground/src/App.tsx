@@ -1,6 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { SurveyBuilder } from '@edb/survey/builder';
-import { parseSurvey, type Locale, type SurveyDefinition, type SurveyResult } from '@edb/survey/core';
+import {
+  parseSurvey,
+  type Locale,
+  type SurveyDefinition,
+  type SurveyResult,
+} from '@edb/survey/core';
 import { SurveyRenderer } from '@edb/survey/runtime';
 import { SAMPLE_LABELS, samples, type SampleKey } from './samples';
 
@@ -102,7 +107,7 @@ export function App(): ReactNode {
             onChange={setSurvey}
             onSave={(saved) => {
               window.localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-              // eslint-disable-next-line no-console
+
               console.info('Sondage enregistré', saved);
             }}
           />

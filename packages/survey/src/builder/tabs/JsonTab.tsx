@@ -56,7 +56,12 @@ export function JsonTab(): ReactNode {
   return (
     <div className="edbs-json">
       <div className="edbs-json__bar">
-        <button type="button" className="edbs-btn edbs-btn--primary" onClick={apply} disabled={!dirty}>
+        <button
+          type="button"
+          className="edbs-btn edbs-btn--primary"
+          onClick={apply}
+          disabled={!dirty}
+        >
           {t('jsonApply')}
         </button>
         <button type="button" className="edbs-btn edbs-btn--secondary" onClick={copy}>

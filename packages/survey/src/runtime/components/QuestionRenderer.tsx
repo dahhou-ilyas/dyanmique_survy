@@ -40,9 +40,7 @@ export const QuestionRenderer = memo(function QuestionRenderer({
   if (!snapshot || !snapshot.visible) return null;
 
   const { question } = snapshot;
-  const Field = components[question.type] as
-    | ((props: FieldProps) => ReactNode)
-    | undefined;
+  const Field = components[question.type] as ((props: FieldProps) => ReactNode) | undefined;
 
   if (!Field) {
     // Un type sans composant est une erreur d'intégration, pas une donnée invalide :

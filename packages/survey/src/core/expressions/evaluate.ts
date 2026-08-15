@@ -228,10 +228,7 @@ export function evaluateCondition(
 }
 
 /** Comme `evaluateExpression`, mais renvoie `undefined` en cas d'erreur au lieu de lever. */
-export function tryEvaluateExpression(
-  expression: string,
-  context: EvaluationContext,
-): unknown {
+export function tryEvaluateExpression(expression: string, context: EvaluationContext): unknown {
   try {
     return evaluateExpression(expression, context);
   } catch (error) {

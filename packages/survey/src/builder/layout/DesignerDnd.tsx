@@ -13,12 +13,14 @@ import {
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useState, type ReactNode } from 'react';
 import { findElementById } from '../../core/schema/traverse';
-import { isPanel } from '../../core/schema/types';
 import { useBuilderContext } from '../BuilderProvider';
-import { decodeContainerId, isContainerId } from '../canvas/dragIds';
+import {
+  isToolboxDrag,
+  resolveDropTarget,
+  toolboxDragType,
+  TOOLBOX_DRAG_PREFIX,
+} from '../canvas/dropTarget';
 import { QuestionIcon } from '../icons';
-import { TOOLBOX_DRAG_PREFIX } from '../toolbox/ToolboxPanel';
-import type { DropTarget } from '../store/builderStore';
 
 /**
  * Contexte de glisser-déposer du concepteur.
@@ -38,42 +40,16 @@ export function DesignerDnd({ children }: { children: ReactNode }): ReactNode {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
-  /** Traduit la cible survolée en position d'insertion dans le modèle. */
-  const resolveTarget = (overId: string): DropTarget | undefined => {
-    const state = store.getState();
-
-    if (isContainerId(overId)) {
-      const container = decodeContainerId(overId);
-      if (!container) return undefined;
-      return { ...container, index: Number.POSITIVE_INFINITY };
-    }
-
-    const location = findElementById(state.survey, overId);
-    if (!location) return undefined;
-
-    // Déposer sur un groupe replié : on insère à l'intérieur plutôt qu'à côté,
-    // sinon un groupe vide serait impossible à remplir au clavier.
-    if (isPanel(location.element)) {
-      return { pageId: location.page.id, parentId: location.element.id, index: 0 };
-    }
-
-    return {
-      pageId: location.page.id,
-      parentId: location.parent?.id ?? null,
-      index: location.index,
-    };
-  };
-
   const handleDragEnd = ({ active, over }: DragEndEvent): void => {
     setActiveId(null);
     if (!over) return;
 
     const activeKey = String(active.id);
-    const target = resolveTarget(String(over.id));
+    const target = resolveDropTarget(store.getState().survey, String(over.id));
     if (!target) return;
 
-    if (activeKey.startsWith(TOOLBOX_DRAG_PREFIX)) {
-      store.getState().addElement(activeKey.slice(TOOLBOX_DRAG_PREFIX.length), target);
+    if (isToolboxDrag(activeKey)) {
+      store.getState().addElement(toolboxDragType(activeKey), target);
       return;
     }
 

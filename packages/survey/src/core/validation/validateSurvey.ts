@@ -126,11 +126,7 @@ export function validateSurveyDefinition(survey: SurveyDefinition): ValidateSurv
       // Une condition qui dépend d'une réponse posée *après* elle ne peut jamais
       // être vraie au premier affichage : c'est presque toujours une erreur de conception.
       const referenceRank = nameOrder.get(reference);
-      if (
-        elementRank !== undefined &&
-        referenceRank !== undefined &&
-        referenceRank > elementRank
-      ) {
+      if (elementRank !== undefined && referenceRank !== undefined && referenceRank > elementRank) {
         report({
           severity: 'warning',
           code: 'forward-reference',
@@ -161,7 +157,13 @@ export function validateSurveyDefinition(survey: SurveyDefinition): ValidateSurv
     const pageRank = rank;
     rank += 1;
 
-    checkExpressionField(page.visibleIf, `Page « ${page.name} », afficher si`, page.id, page.name, pageRank);
+    checkExpressionField(
+      page.visibleIf,
+      `Page « ${page.name} », afficher si`,
+      page.id,
+      page.name,
+      pageRank,
+    );
 
     if (collectPageQuestions(page).length === 0) {
       report({
@@ -178,8 +180,20 @@ export function validateSurveyDefinition(survey: SurveyDefinition): ValidateSurv
       rank += 1;
       const label = (field: string): string => `« ${element.name} », ${field}`;
 
-      checkExpressionField(element.visibleIf, label('afficher si'), element.id, element.name, elementRank);
-      checkExpressionField(element.enableIf, label('activer si'), element.id, element.name, elementRank);
+      checkExpressionField(
+        element.visibleIf,
+        label('afficher si'),
+        element.id,
+        element.name,
+        elementRank,
+      );
+      checkExpressionField(
+        element.enableIf,
+        label('activer si'),
+        element.id,
+        element.name,
+        elementRank,
+      );
 
       if (isPanel(element)) {
         if (element.elements.length === 0) {

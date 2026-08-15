@@ -102,7 +102,9 @@ function collectRows(survey: SurveyDefinition): TranslationRow[] {
           value: choice.text,
           apply: (store, locale, text) => {
             const next: Choice[] = element.choices.map((current, i) =>
-              i === index ? { ...current, text: setLocalizedText(current.text, locale, text) } : current,
+              i === index
+                ? { ...current, text: setLocalizedText(current.text, locale, text) }
+                : current,
             );
             store.getState().updateElement(element.id, { choices: next });
           },

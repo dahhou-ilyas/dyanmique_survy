@@ -34,9 +34,7 @@ describe('références', () => {
   });
 
   it('résout {item} depuis le contexte d’option', () => {
-    expect(
-      evaluateExpression('{item} = 2', { data: {}, item: 2, now: FIXED_NOW }),
-    ).toBe(true);
+    expect(evaluateExpression('{item} = 2', { data: {}, item: 2, now: FIXED_NOW })).toBe(true);
   });
 });
 
@@ -336,7 +334,7 @@ describe('scénarios métier du cahier des charges', () => {
   });
 
   it('rend une question obligatoire pour les majeurs', () => {
-    expect(condition("age({naissance}) >= 18", { naissance: '1990-01-01' })).toBe(true);
-    expect(condition("age({naissance}) >= 18", { naissance: '2020-01-01' })).toBe(false);
+    expect(condition('age({naissance}) >= 18', { naissance: '1990-01-01' })).toBe(true);
+    expect(condition('age({naissance}) >= 18', { naissance: '2020-01-01' })).toBe(false);
   });
 });

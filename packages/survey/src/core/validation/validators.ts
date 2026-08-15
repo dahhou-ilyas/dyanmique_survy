@@ -83,10 +83,18 @@ function applyValidator(
         return undefined;
       }
       if (minValue !== undefined && numeric < minValue) {
-        return { key: 'numericMin', params: { min: minValue }, ...(customText ? { customText } : {}) };
+        return {
+          key: 'numericMin',
+          params: { min: minValue },
+          ...(customText ? { customText } : {}),
+        };
       }
       if (maxValue !== undefined && numeric > maxValue) {
-        return { key: 'numericMax', params: { max: maxValue }, ...(customText ? { customText } : {}) };
+        return {
+          key: 'numericMax',
+          params: { max: maxValue },
+          ...(customText ? { customText } : {}),
+        };
       }
       return undefined;
     }

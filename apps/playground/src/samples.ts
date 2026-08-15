@@ -60,7 +60,10 @@ export const satisfactionSample: SurveyDefinition = {
           otherText: { fr: 'Autre raison', en: 'Other reason' },
           choices: [
             { value: 'lenteur', text: { fr: 'Lenteur de l’application', en: 'App is slow' } },
-            { value: 'ergonomie', text: { fr: 'Navigation peu claire', en: 'Confusing navigation' } },
+            {
+              value: 'ergonomie',
+              text: { fr: 'Navigation peu claire', en: 'Confusing navigation' },
+            },
             { value: 'fonctions', text: { fr: 'Fonctions manquantes', en: 'Missing features' } },
             { value: 'support', text: { fr: 'Service client', en: 'Customer support' } },
           ],
@@ -217,7 +220,10 @@ export const kycSample: SurveyDefinition = {
                 { value: 'salaire', text: { fr: 'Salaires', en: 'Salary' } },
                 { value: 'epargne', text: { fr: 'Épargne', en: 'Savings' } },
                 { value: 'immobilier', text: { fr: 'Revenus immobiliers', en: 'Property income' } },
-                { value: 'heritage', text: { fr: 'Héritage / donation', en: 'Inheritance / gift' } },
+                {
+                  value: 'heritage',
+                  text: { fr: 'Héritage / donation', en: 'Inheritance / gift' },
+                },
               ],
             },
           ],

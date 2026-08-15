@@ -1,4 +1,8 @@
-import { evaluateCondition, tryEvaluateExpression, type EvaluationContext } from '../expressions/evaluate';
+import {
+  evaluateCondition,
+  tryEvaluateExpression,
+  type EvaluationContext,
+} from '../expressions/evaluate';
 import type { ExpressionFunction } from '../expressions/functions';
 import { resolveText } from '../localization/resolveText';
 import { questionRegistry, type QuestionRegistry } from '../registry/questionRegistry';
@@ -95,11 +99,7 @@ export interface SurveyState {
 }
 
 export type SurveyEventName =
-  | 'stateChanged'
-  | 'valueChanged'
-  | 'pageChanged'
-  | 'completed'
-  | 'validationFailed';
+  'stateChanged' | 'valueChanged' | 'pageChanged' | 'completed' | 'validationFailed';
 
 export interface ValueChangedEvent {
   name: string;
@@ -254,7 +254,8 @@ export class SurveyEngine {
       return { visible, enabled, required: false, visibleChoices: [] };
     }
 
-    const required = element.isRequired === true || evaluateCondition(element.requiredIf, context, false);
+    const required =
+      element.isRequired === true || evaluateCondition(element.requiredIf, context, false);
 
     let visibleChoices: Choice[] = [];
     if (isChoiceQuestion(element)) {
@@ -796,8 +797,11 @@ export class SurveyEngine {
             break;
           }
           case 'skip': {
-            this.goToPageNamed(trigger.gotoName) ||
+            // `gotoName` désigne indifféremment une page ou une question : on tente
+            // la page d'abord, puis la page qui contient la question nommée.
+            if (!this.goToPageNamed(trigger.gotoName)) {
               this.goToPageOfQuestion(trigger.gotoName);
+            }
             break;
           }
           case 'complete': {

@@ -1,4 +1,9 @@
-import { DEFAULT_LOCALE, type Locale, type LocalizedMap, type LocalizedString } from '../schema/types';
+import {
+  DEFAULT_LOCALE,
+  type Locale,
+  type LocalizedMap,
+  type LocalizedString,
+} from '../schema/types';
 
 /**
  * Résout un texte multilingue vers une chaîne affichable.
@@ -40,10 +45,7 @@ export function resolveTextOrUndefined(
  * apparaître le texte anglais, et la frappe suivante s'y ajouterait. Une chaîne
  * nue est en revanche renvoyée telle quelle — c'est l'unique texte du sondage.
  */
-export function resolveEditableText(
-  text: LocalizedString | undefined,
-  locale: Locale,
-): string {
+export function resolveEditableText(text: LocalizedString | undefined, locale: Locale): string {
   if (text === undefined || text === null) return '';
   if (typeof text === 'string') return text;
   return text[locale] ?? text.default ?? '';

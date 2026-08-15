@@ -149,11 +149,9 @@ describe('normalizeValue', () => {
 describe('getDisplayValue', () => {
   it('remplace le code d’option par son libellé', () => {
     const question = createQuestion('dropdown', 'q') as DropdownQuestion;
-    const rendered = questionRegistry.require('dropdown').getDisplayValue(
-      'item2',
-      question,
-      context(),
-    );
+    const rendered = questionRegistry
+      .require('dropdown')
+      .getDisplayValue('item2', question, context());
     expect(rendered).toBe('Option 2');
   });
 
@@ -210,9 +208,9 @@ describe('getDisplayValue', () => {
 
   it('formate la date selon la locale', () => {
     const question = createQuestion('date', 'q');
-    expect(questionRegistry.require('date').getDisplayValue('2026-03-14', question, context())).toBe(
-      '14/03/2026',
-    );
+    expect(
+      questionRegistry.require('date').getDisplayValue('2026-03-14', question, context()),
+    ).toBe('14/03/2026');
   });
 
   it('renvoie une chaîne vide pour un bloc de contenu', () => {

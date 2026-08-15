@@ -66,17 +66,11 @@ export function collectElements(survey: SurveyDefinition): SurveyElement[] {
   return elements;
 }
 
-export function findQuestionByName(
-  survey: SurveyDefinition,
-  name: string,
-): Question | undefined {
+export function findQuestionByName(survey: SurveyDefinition, name: string): Question | undefined {
   return collectQuestions(survey).find((question) => question.name === name);
 }
 
-export function findElementById(
-  survey: SurveyDefinition,
-  id: string,
-): ElementLocation | undefined {
+export function findElementById(survey: SurveyDefinition, id: string): ElementLocation | undefined {
   for (let pageIndex = 0; pageIndex < survey.pages.length; pageIndex += 1) {
     const page = survey.pages[pageIndex];
     if (!page) continue;
@@ -136,11 +130,7 @@ export function collectUsedNames(survey: SurveyDefinition): Set<string> {
  * Génère un `name` libre à partir d'un préfixe : `question1`, `question2`…
  * `exclude` permet d'ignorer le nom actuel d'un élément en cours de renommage.
  */
-export function generateUniqueName(
-  taken: Set<string>,
-  prefix: string,
-  exclude?: string,
-): string {
+export function generateUniqueName(taken: Set<string>, prefix: string, exclude?: string): string {
   let index = 1;
   let candidate = `${prefix}${index}`;
   while (taken.has(candidate) && candidate !== exclude) {

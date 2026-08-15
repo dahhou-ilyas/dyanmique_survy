@@ -111,7 +111,10 @@ export function buildDependencyGraph(survey: SurveyDefinition): DependencyGraph 
   return {
     byName,
     expressionElementIds,
-    calculatedOrder: topologicalOrder(calculatedValues.map((value) => value.name), calculatedReferences),
+    calculatedOrder: topologicalOrder(
+      calculatedValues.map((value) => value.name),
+      calculatedReferences,
+    ),
   };
 }
 
@@ -153,7 +156,10 @@ export interface AffectedTargets {
  * Le parcours est transitif : une valeur calculée touchée devient elle-même une
  * source de changement pour les expressions qui la citent.
  */
-export function affectedBy(graph: DependencyGraph, changedNames: Iterable<string>): AffectedTargets {
+export function affectedBy(
+  graph: DependencyGraph,
+  changedNames: Iterable<string>,
+): AffectedTargets {
   const elements = new Set<string>();
   const calculated = new Set<string>();
   const triggers = new Set<number>();

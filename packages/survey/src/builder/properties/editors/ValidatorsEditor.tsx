@@ -52,9 +52,7 @@ export function ValidatorsEditor({ value, onChange }: EditorProps): ReactNode {
     <div className="edbs-validators">
       {validators.map((validator, index) => (
         <fieldset key={index} className="edbs-validators__item">
-          <legend className="edbs-visually-hidden">
-            {`${t('validatorType')} ${index + 1}`}
-          </legend>
+          <legend className="edbs-visually-hidden">{`${t('validatorType')} ${index + 1}`}</legend>
 
           <div className="edbs-validators__head">
             <select
@@ -92,7 +90,9 @@ export function ValidatorsEditor({ value, onChange }: EditorProps): ReactNode {
               placeholder="^[0-9]{5}$"
               aria-label="Expression régulière"
               value={validator.regex}
-              onChange={(event) => update(index, { regex: event.target.value } as Partial<Validator>)}
+              onChange={(event) =>
+                update(index, { regex: event.target.value } as Partial<Validator>)
+              }
             />
           )}
 

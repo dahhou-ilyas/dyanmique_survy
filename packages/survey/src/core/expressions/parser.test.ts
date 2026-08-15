@@ -217,7 +217,7 @@ describe('cache d’AST', () => {
 
 describe('collectReferences', () => {
   it('remonte les noms de premier niveau', () => {
-    const node = parseExpression("{a} = 1 and iif({b.c} > 2, {d}, 0) anyof [{e}]");
+    const node = parseExpression('{a} = 1 and iif({b.c} > 2, {d}, 0) anyof [{e}]');
     expect([...collectReferences(node)].sort()).toEqual(['a', 'b', 'd', 'e']);
   });
 

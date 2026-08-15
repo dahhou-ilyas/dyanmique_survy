@@ -307,8 +307,7 @@ export function toSchemaIssues(error: z.ZodError): SchemaIssue[] {
 }
 
 export type ParseSurveyResult =
-  | { success: true; data: SurveyDefinition }
-  | { success: false; issues: SchemaIssue[] };
+  { success: true; data: SurveyDefinition } | { success: false; issues: SchemaIssue[] };
 
 /** Valide sans lever d'exception — c'est la forme utilisée par le builder. */
 export function safeParseSurvey(input: unknown): ParseSurveyResult {

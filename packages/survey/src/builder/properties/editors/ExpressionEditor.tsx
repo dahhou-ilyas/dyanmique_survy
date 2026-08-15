@@ -54,9 +54,7 @@ export function ExpressionEditor({ value, onChange, id }: EditorProps): ReactNod
         value={expression}
         placeholder="{question1} = 'oui'"
         aria-invalid={check.valid ? undefined : true}
-        onChange={(event) =>
-          onChange(event.target.value === '' ? undefined : event.target.value)
-        }
+        onChange={(event) => onChange(event.target.value === '' ? undefined : event.target.value)}
       />
 
       {!check.valid && (
@@ -95,18 +93,29 @@ export function ExpressionEditor({ value, onChange, id }: EditorProps): ReactNod
 
           <p className="edbs-field__label">Opérateurs</p>
           <div className="edbs-expression__tokens">
-            {['=', '!=', '>', '<', '>=', '<=', 'and', 'or', 'contains', 'anyof', 'empty', 'notempty'].map(
-              (operator) => (
-                <button
-                  key={operator}
-                  type="button"
-                  className="edbs-token"
-                  onClick={() => insert(operator)}
-                >
-                  {operator}
-                </button>
-              ),
-            )}
+            {[
+              '=',
+              '!=',
+              '>',
+              '<',
+              '>=',
+              '<=',
+              'and',
+              'or',
+              'contains',
+              'anyof',
+              'empty',
+              'notempty',
+            ].map((operator) => (
+              <button
+                key={operator}
+                type="button"
+                className="edbs-token"
+                onClick={() => insert(operator)}
+              >
+                {operator}
+              </button>
+            ))}
           </div>
 
           <p className="edbs-field__label">Fonctions</p>

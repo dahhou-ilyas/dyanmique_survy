@@ -3,10 +3,8 @@ import type { ReactNode } from 'react';
 import { CATEGORY_LABELS, TOOLBOX_ORDER } from '../../core/registry/questionRegistry';
 import type { IconName, QuestionCategory } from '../../core/registry/types';
 import { useBuilderContext } from '../BuilderProvider';
+import { TOOLBOX_DRAG_PREFIX } from '../canvas/dropTarget';
 import { QuestionIcon } from '../icons';
-
-/** Préfixe des identifiants de glisser-déposer venant de la palette. */
-export const TOOLBOX_DRAG_PREFIX = 'toolbox:';
 
 interface ToolboxEntry {
   type: string;

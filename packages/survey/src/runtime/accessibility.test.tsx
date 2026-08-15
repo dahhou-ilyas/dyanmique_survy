@@ -85,9 +85,7 @@ describe('sémantique et clavier', () => {
 
   it('groupe les choix multiples dans un fieldset nommé', () => {
     render(<SurveyRenderer definition={surveyWithEveryType()} />);
-    expect(
-      screen.getByRole('group', { name: /Question à choix multiple/ }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: /Question à choix multiple/ })).toBeInTheDocument();
   });
 
   it('annonce le caractère obligatoire aux lecteurs d’écran', () => {

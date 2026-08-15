@@ -148,7 +148,8 @@ class Parser {
 
     if (
       (token.type === 'op' && token.value === '!') ||
-      (token.type === 'ident' && (token.value.toLowerCase() === 'not' || token.value.toLowerCase() === 'negate'))
+      (token.type === 'ident' &&
+        (token.value.toLowerCase() === 'not' || token.value.toLowerCase() === 'negate'))
     ) {
       this.next();
       return { kind: 'unary', operator: '!', operand: this.parseUnary() };

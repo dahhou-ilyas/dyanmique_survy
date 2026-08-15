@@ -35,7 +35,10 @@ export function DiagnosticsPanel(): ReactNode {
       </summary>
       <ul className="edbs-diagnostics__list">
         {result.diagnostics.map((diagnostic, index) => (
-          <li key={index} className={`edbs-diagnostics__item edbs-diagnostics__item--${diagnostic.severity}`}>
+          <li
+            key={index}
+            className={`edbs-diagnostics__item edbs-diagnostics__item--${diagnostic.severity}`}
+          >
             {diagnostic.elementId ? (
               <button
                 type="button"

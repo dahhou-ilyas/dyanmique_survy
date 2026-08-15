@@ -76,7 +76,13 @@ export function ArrowRightIcon(props: IconProps): ReactNode {
 }
 
 /** Étoile pleine ou vide selon `filled` — utilisée par l'échelle de notation. */
-export function StarIcon({ filled = false, size = 24 }: { filled?: boolean; size?: number }): ReactNode {
+export function StarIcon({
+  filled = false,
+  size = 24,
+}: {
+  filled?: boolean;
+  size?: number;
+}): ReactNode {
   return (
     <svg
       width={size}

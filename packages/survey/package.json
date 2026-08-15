@@ -13,20 +13,44 @@
   ],
   "exports": {
     ".": {
-      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./core": {
-      "import": { "types": "./dist/core.d.ts", "default": "./dist/core.js" },
-      "require": { "types": "./dist/core.d.cts", "default": "./dist/core.cjs" }
+      "import": {
+        "types": "./dist/core.d.ts",
+        "default": "./dist/core.js"
+      },
+      "require": {
+        "types": "./dist/core.d.cts",
+        "default": "./dist/core.cjs"
+      }
     },
     "./runtime": {
-      "import": { "types": "./dist/runtime.d.ts", "default": "./dist/runtime.js" },
-      "require": { "types": "./dist/runtime.d.cts", "default": "./dist/runtime.cjs" }
+      "import": {
+        "types": "./dist/runtime.d.ts",
+        "default": "./dist/runtime.js"
+      },
+      "require": {
+        "types": "./dist/runtime.d.cts",
+        "default": "./dist/runtime.cjs"
+      }
     },
     "./builder": {
-      "import": { "types": "./dist/builder.d.ts", "default": "./dist/builder.js" },
-      "require": { "types": "./dist/builder.d.cts", "default": "./dist/builder.cjs" }
+      "import": {
+        "types": "./dist/builder.d.ts",
+        "default": "./dist/builder.js"
+      },
+      "require": {
+        "types": "./dist/builder.d.cts",
+        "default": "./dist/builder.cjs"
+      }
     },
     "./themes/*.css": "./dist/themes/*.css",
     "./package.json": "./package.json"
@@ -36,9 +60,15 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "core": ["./dist/core.d.ts"],
-      "runtime": ["./dist/runtime.d.ts"],
-      "builder": ["./dist/builder.d.ts"]
+      "core": [
+        "./dist/core.d.ts"
+      ],
+      "runtime": [
+        "./dist/runtime.d.ts"
+      ],
+      "builder": [
+        "./dist/builder.d.ts"
+      ]
     }
   },
   "engines": {

@@ -72,9 +72,7 @@ describe('saisie et liaison au moteur', () => {
     );
 
     await user.click(screen.getByRole('checkbox', { name: 'Option 1' }));
-    expect(onValueChanged).toHaveBeenLastCalledWith(
-      expect.objectContaining({ value: ['item3'] }),
-    );
+    expect(onValueChanged).toHaveBeenLastCalledWith(expect.objectContaining({ value: ['item3'] }));
   });
 
   it('conserve l’ordre des options plutôt que l’ordre de cochage', async () => {
@@ -243,7 +241,8 @@ describe('bloc de contenu', () => {
     const survey = createSurvey();
     const block = createQuestion('html', 'intro');
     if (block.type === 'html') {
-      block.html = '<p onclick="alert(1)">Texte</p><script>alert(2)</script><img src=x onerror=alert(3)>';
+      block.html =
+        '<p onclick="alert(1)">Texte</p><script>alert(2)</script><img src=x onerror=alert(3)>';
     }
     survey.pages[0]!.elements = [block];
     const { container } = renderSurvey(survey);

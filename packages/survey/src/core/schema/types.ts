@@ -56,11 +56,7 @@ export interface ExpressionValidator extends ValidatorBase {
 }
 
 export type Validator =
-  | EmailValidator
-  | RegexValidator
-  | NumericValidator
-  | TextLengthValidator
-  | ExpressionValidator;
+  EmailValidator | RegexValidator | NumericValidator | TextLengthValidator | ExpressionValidator;
 
 export type ValidatorType = Validator['type'];
 
@@ -371,9 +367,7 @@ export function isQuestion(element: SurveyElement): element is Question {
 
 export function isChoiceQuestion(question: Question): question is ChoiceQuestion {
   return (
-    question.type === 'radiogroup' ||
-    question.type === 'checkbox' ||
-    question.type === 'dropdown'
+    question.type === 'radiogroup' || question.type === 'checkbox' || question.type === 'dropdown'
   );
 }
 

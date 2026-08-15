@@ -181,7 +181,9 @@ function ElementProperties({ elementId }: { elementId: string }): ReactNode {
 
 function PageProperties({ pageId }: { pageId: string }): ReactNode {
   const { store, t } = useBuilderContext();
-  const page = useBuilder((state) => state.survey.pages.find((candidate) => candidate.id === pageId));
+  const page = useBuilder((state) =>
+    state.survey.pages.find((candidate) => candidate.id === pageId),
+  );
 
   if (!page) return <EmptySelection />;
 

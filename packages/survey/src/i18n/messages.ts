@@ -143,10 +143,7 @@ export const messages: Record<Locale, Messages> = { fr, en };
 export type MessageKey = keyof Messages;
 
 /** Remplace les jetons `{nom}` d'un gabarit par leurs valeurs. */
-export function formatMessage(
-  template: string,
-  params?: Record<string, string | number>,
-): string {
+export function formatMessage(template: string, params?: Record<string, string | number>): string {
   if (!params) return template;
   return template.replace(/\{(\w+)\}/g, (match, key: string) =>
     key in params ? String(params[key]) : match,

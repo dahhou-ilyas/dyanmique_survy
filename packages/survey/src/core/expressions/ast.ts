@@ -67,13 +67,7 @@ export interface CallNode {
 }
 
 export type ExpressionNode =
-  | LiteralNode
-  | RefNode
-  | ArrayNode
-  | UnaryNode
-  | PostfixNode
-  | BinaryNode
-  | CallNode;
+  LiteralNode | RefNode | ArrayNode | UnaryNode | PostfixNode | BinaryNode | CallNode;
 
 /**
  * Noms de premier niveau référencés par l'expression.
