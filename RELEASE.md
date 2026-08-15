@@ -48,7 +48,27 @@ Dépôt → **Settings → Actions → General → Workflow permissions** :
 - cocher **Read and write permissions** ;
 - cocher **Allow GitHub Actions to create and approve pull requests**.
 
-### 1.4 Vérifier le nom de la branche
+### 1.4 Pourquoi changesets est épinglé en 2.x
+
+`@changesets/cli@3` et `@changesets/changelog-github@1` exigent **Node ≥ 22.11** : ils
+appellent `module.enableCompileCache()`, une API absente de Node 20. Le projet étant développé
+et testé sur Node 20, la version 3 échoue à la fois en CI et en local, avec :
+
+```
+TypeError: enableCompileCache is not a function
+```
+
+Le projet reste donc sur `@changesets/cli@^2.31.1`, qui fonctionne sur Node 20 **et** 22.
+
+Le générateur de CHANGELOG est celui par défaut (`@changesets/cli/changelog`), et non
+`@changesets/changelog-github`, pour deux raisons : ce dernier exige un `GITHUB_TOKEN` même
+en local, et il produit des liens vers les commits et les pull requests d'un dépôt **privé** —
+liens morts pour quiconque installe le package public.
+
+> Si vous passez un jour votre poste en Node 22, vous pourrez remonter changesets en 3.x et,
+> au passage, dépingler `jsdom` (bloqué en 29.x pour la même raison).
+
+### 1.5 Vérifier le nom de la branche
 
 Les workflows visent `master`, qui est bien la branche de ce dépôt. Si vous la renommez en
 `main`, il faut mettre à jour trois endroits : `.github/workflows/ci.yml`,

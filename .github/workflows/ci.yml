@@ -49,6 +49,13 @@ jobs:
       - name: TypeScript
         run: pnpm typecheck
 
+      # Vérifie que la chaîne de release démarre — CLI compatible avec la version
+      # de Node, configuration `.changeset/` valide. Sans ce contrôle, une
+      # incompatibilité ne se découvre qu'au moment de préparer une version,
+      # c'est-à-dire dans le workflow Release et non ici.
+      - name: Chaîne de release opérationnelle
+        run: pnpm changeset status
+
   # ---------------------------------------------------------------------------
   # Tests — matrice de versions de Node.
   # 20 est la version de développement, 22 celle qui publiera (elle seule sait
