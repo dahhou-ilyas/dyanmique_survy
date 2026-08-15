@@ -1,7 +1,7 @@
 /**
  * Variante du thème par défaut qui suit la préférence système.
  *
- *   import '@edb/survey/themes/dark-auto.css';
+ *   import '@dahhou-ilyas/survey/themes/dark-auto.css';
  *
  * À n'utiliser que si l'application hôte gère elle aussi le mode sombre : sinon,
  * le sondage passerait en sombre au milieu d'une page restée claire.

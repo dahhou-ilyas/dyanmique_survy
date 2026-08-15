@@ -1,7 +1,7 @@
 /**
  * Variante dense — sondages longs, écrans chargés, back-office.
  *
- *   import '@edb/survey/themes/compact.css';
+ *   import '@dahhou-ilyas/survey/themes/compact.css';
  *
  * Ne redéfinit que des jetons : aucun sélecteur du thème par défaut n'est surchargé.
  */

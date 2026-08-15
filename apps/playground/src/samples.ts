@@ -1,4 +1,4 @@
-import type { SurveyDefinition } from '@edb/survey/core';
+import type { SurveyDefinition } from '@dahhou-ilyas/survey/core';
 
 /**
  * Exemples couvrant les trois cas cités par le cahier des charges :

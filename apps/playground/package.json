@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@edb/survey": "workspace:*",
+    "@dahhou-ilyas/survey": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

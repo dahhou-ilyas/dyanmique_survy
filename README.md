@@ -1,6 +1,6 @@
 # sondageBuilder
 
-Monorepo du **module de sondage** : le package `@edb/survey` et son bac à sable.
+Monorepo du **module de sondage** : le package `@dahhou-ilyas/survey` et son bac à sable.
 
 | Dossier           | Rôle                                                                                      |
 | ----------------- | ----------------------------------------------------------------------------------------- |
@@ -20,7 +20,7 @@ builder — conçu pour être consommé comme dépendance :
 // package.json du projet parent
 {
   "dependencies": {
-    "@edb/survey": "^0.1.0",
+    "@dahhou-ilyas/survey": "^0.1.0",
   },
 }
 ```
@@ -56,8 +56,8 @@ pnpm dev        # bac à sable sur http://localhost:5173
 - **TypeScript 6**, pas 7 : le compilateur natif de TS 7 n'expose pas encore d'API
   programmatique stable, dont dépendent `typescript-eslint` et la génération des
   déclarations. À revoir quand TS 7.1 sera disponible.
-- **Un seul package, plusieurs points d'entrée** : `@edb/survey/runtime` pour l'application
-  bancaire, `@edb/survey/builder` pour le back-office. Le builder et ses dépendances
+- **Un seul package, plusieurs points d'entrée** : `@dahhou-ilyas/survey/runtime` pour l'application
+  bancaire, `@dahhou-ilyas/survey/builder` pour le back-office. Le builder et ses dépendances
   (`@dnd-kit`, `zustand`, `immer`, `zod`) n'entrent jamais dans le bundle client —
   [vérifié par la mesure](./packages/survey/README.md#points-dentrée).
 - **Pas de CSS-in-JS, pas de Tailwind dans le package** : des variables CSS sur `.edbs-root`,

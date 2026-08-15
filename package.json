@@ -2,24 +2,24 @@
   "name": "sondage-builder",
   "version": "0.0.0",
   "private": true,
-  "description": "Monorepo du module de sondage EDB — package @edb/survey (core, runtime, builder, thèmes)",
+  "description": "Monorepo du module de sondage EDB — package @dahhou-ilyas/survey (core, runtime, builder, thèmes)",
   "type": "module",
   "engines": {
     "node": ">=20.19.0"
   },
   "packageManager": "pnpm@10.0.0",
   "scripts": {
-    "build": "pnpm --filter @edb/survey build",
+    "build": "pnpm --filter @dahhou-ilyas/survey build",
     "dev": "pnpm --filter playground dev",
-    "test": "pnpm --filter @edb/survey test",
-    "test:watch": "pnpm --filter @edb/survey test:watch",
-    "test:coverage": "pnpm --filter @edb/survey test:coverage",
+    "test": "pnpm --filter @dahhou-ilyas/survey test",
+    "test:watch": "pnpm --filter @dahhou-ilyas/survey test:watch",
+    "test:coverage": "pnpm --filter @dahhou-ilyas/survey test:coverage",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @edb/survey verify:pkg",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @dahhou-ilyas/survey verify:pkg",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish"
@@ -30,6 +30,7 @@
     ]
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.0",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.8.1",

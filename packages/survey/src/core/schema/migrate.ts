@@ -50,7 +50,7 @@ export function migrateSurvey(input: unknown): SurveyDefinition {
   if (version > CURRENT_SCHEMA_VERSION) {
     throw new SurveyMigrationError(
       `Cette définition est en version ${version}, alors que ce package gère au plus la ` +
-        `version ${CURRENT_SCHEMA_VERSION}. Mettez à jour @edb/survey avant de l'ouvrir.`,
+        `version ${CURRENT_SCHEMA_VERSION}. Mettez à jour @dahhou-ilyas/survey avant de l'ouvrir.`,
     );
   }
 

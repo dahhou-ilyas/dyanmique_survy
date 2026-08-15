@@ -30,7 +30,7 @@ describe('migrateSurvey', () => {
       SurveyMigrationError,
     );
     expect(() => migrateSurvey({ schemaVersion: CURRENT_SCHEMA_VERSION + 1 })).toThrow(
-      /Mettez à jour @edb\/survey/,
+      /Mettez à jour @dahhou-ilyas\/survey/,
     );
   });
 

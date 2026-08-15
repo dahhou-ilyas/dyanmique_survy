@@ -4,7 +4,7 @@ import { App } from './App';
 import './app.css';
 
 // Les thèmes du package : `builder.css` inclut déjà `default.css`.
-import '@edb/survey/themes/builder.css';
+import '@dahhou-ilyas/survey/themes/builder.css';
 
 const container = document.getElementById('root');
 if (!container) throw new Error('Élément #root introuvable.');

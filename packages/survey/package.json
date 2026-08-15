@@ -1,15 +1,42 @@
 {
-  "name": "@edb/survey",
+  "name": "@dahhou-ilyas/survey",
   "version": "0.1.0",
   "description": "Module de sondage : modèle JSON, moteur de rendu React et builder drag & drop — sans dépendance réseau.",
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "author": "Ilyas Dahhou",
+  "homepage": "https://github.com/dahhou-ilyas/dyanmique_survy#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dahhou-ilyas/dyanmique_survy.git",
+    "directory": "packages/survey"
+  },
+  "bugs": {
+    "url": "https://github.com/dahhou-ilyas/dyanmique_survy/issues"
+  },
+  "keywords": [
+    "survey",
+    "form",
+    "form-builder",
+    "survey-builder",
+    "questionnaire",
+    "react",
+    "json-schema",
+    "drag-and-drop",
+    "conditional-logic",
+    "accessibility"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "type": "module",
   "sideEffects": [
     "*.css"
   ],
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {

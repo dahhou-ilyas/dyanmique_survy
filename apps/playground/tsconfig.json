@@ -8,10 +8,10 @@
     // Ils reflètent les alias de `vite.config.ts` : en développement, le
     // bac à sable tape dans les sources du package, sans build intermédiaire.
     "paths": {
-      "@edb/survey/core": ["../../packages/survey/src/core/index.ts"],
-      "@edb/survey/runtime": ["../../packages/survey/src/runtime/index.ts"],
-      "@edb/survey/builder": ["../../packages/survey/src/builder/index.ts"],
-      "@edb/survey": ["../../packages/survey/src/index.ts"]
+      "@dahhou-ilyas/survey/core": ["../../packages/survey/src/core/index.ts"],
+      "@dahhou-ilyas/survey/runtime": ["../../packages/survey/src/runtime/index.ts"],
+      "@dahhou-ilyas/survey/builder": ["../../packages/survey/src/builder/index.ts"],
+      "@dahhou-ilyas/survey": ["../../packages/survey/src/index.ts"]
     }
   },
   "include": ["src", "vite.config.ts"]
