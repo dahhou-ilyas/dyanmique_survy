@@ -69,6 +69,24 @@ pnpm dev        # bac à sable sur http://localhost:5173
 
 ## Publication
 
-Le nom de scope `@edb/…` et le registre (npm privé, Nexus, Verdaccio, GitHub Packages)
-restent à confirmer. Ajuster `packages/survey/package.json` (`name`, `publishConfig`) et le
-`.npmrc` avant la première publication.
+Le package est publié sur npm sous le nom **`@dahhou-ilyas/survey`**, licence MIT.
+
+```bash
+npm install @dahhou-ilyas/survey
+```
+
+Trois workflows GitHub Actions couvrent le cycle :
+
+| Workflow      | Déclencheur          | Rôle                                                                                                                   |
+| ------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `ci.yml`      | push et pull request | lint, types, tests Node 20/22, build, `publint`, `attw`, installation dans un projet React 18 vierge, budget de taille |
+| `release.yml` | push sur `master`    | maintient la pull request « Version Packages » — **ne publie pas**                                                     |
+| `publish.yml` | **manuel**           | publie sur npm, pose le tag git et crée la release GitHub                                                              |
+
+Aucune publication n'est automatique : le workflow `publish.yml` se lance à la main, et sa
+simulation est active par défaut. Une version npm est irréversible — `npm unpublish` n'est
+autorisé que 72 heures, et un numéro consommé ne se réutilise jamais.
+
+**La procédure complète est dans [`RELEASE.md`](./RELEASE.md)** : création du jeton npm,
+secrets à enregistrer, réglages GitHub, cycle de version, et la marche à suivre pour passer
+plus tard au « trusted publishing » OIDC (publication sans jeton).

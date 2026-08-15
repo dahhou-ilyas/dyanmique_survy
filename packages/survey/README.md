@@ -28,8 +28,8 @@ jamais sa propre copie de React.
 
 ## Points d'entrée
 
-| Import                     | Pour qui                                   | Contenu                                             |
-| -------------------------- | ------------------------------------------ | --------------------------------------------------- |
+| Import                              | Pour qui                                   | Contenu                                             |
+| ----------------------------------- | ------------------------------------------ | --------------------------------------------------- |
 | `@dahhou-ilyas/survey/runtime`      | l'application qui **affiche** les sondages | `SurveyRenderer`, hooks, composants de champ        |
 | `@dahhou-ilyas/survey/builder`      | le **back-office**                         | `SurveyBuilder`, store, éditeurs                    |
 | `@dahhou-ilyas/survey/core`         | les deux, et le serveur                    | modèle, expressions, validation, `SurveyEngine`     |

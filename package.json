@@ -22,7 +22,9 @@
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @dahhou-ilyas/survey verify:pkg",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "publish:dry-run": "pnpm build && pnpm --filter @dahhou-ilyas/survey exec npm publish --dry-run --access public",
+    "smoke:consumer": "bash .github/scripts/consumer-smoke-test.sh",
+    "smoke:size": "bash .github/scripts/bundle-size-check.sh"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

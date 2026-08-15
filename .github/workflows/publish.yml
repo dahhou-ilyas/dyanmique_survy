@@ -1,0 +1,192 @@
+name: Publish — npm
+
+# Publication sur npmjs.com, DÉCLENCHÉE À LA MAIN uniquement.
+#
+# Aucun push ne publie quoi que ce soit : c'est un choix délibéré. Une
+# publication npm est irréversible — `npm unpublish` n'est autorisé que dans les
+# 72 heures, et un numéro de version consommé ne se réutilise jamais. Le
+# déclenchement manuel garantit qu'une fusion malencontreuse ne peut pas
+# expédier une version.
+#
+# Le mode « simulation » est actif par défaut : le premier lancement montre ce
+# qui serait publié sans rien envoyer.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Simulation (rien n’est envoyé sur npm)'
+        type: boolean
+        default: true
+      tag:
+        description: 'Étiquette de distribution npm'
+        type: choice
+        options: [latest, next, beta]
+        default: latest
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write # créer le tag et la release GitHub
+  id-token: write # attestation de provenance (dépôt public uniquement)
+
+jobs:
+  publish:
+    name: Publier sur npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      # Node 22 : c'est le socle exigé par le « trusted publishing » npm, vers
+      # lequel ce workflow pourra migrer (voir RELEASE.md). npm ≥ 11.5.1 est
+      # nécessaire ; on force la mise à jour, l'image ne le garantit pas.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Mettre npm à jour
+        run: npm install -g npm@latest
+
+      - name: Installer les dépendances
+        run: pnpm install --frozen-lockfile
+
+      # -----------------------------------------------------------------------
+      # Rejouer la qualité complète.
+      # La CI a déjà tourné sur ce commit, mais une publication est
+      # irréversible : le coût de trois minutes est sans commune mesure avec
+      # celui d'une version cassée sur le registre public.
+      # -----------------------------------------------------------------------
+      - name: Lint et types
+        run: pnpm lint && pnpm typecheck
+
+      - name: Tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Valider le paquet
+        run: pnpm --filter @dahhou-ilyas/survey verify:pkg
+
+      # -----------------------------------------------------------------------
+      # La version est-elle déjà sur npm ?
+      # Sans ce contrôle, on découvre le problème au moment du publish, après
+      # avoir créé un tag git qu'il faut ensuite supprimer à la main.
+      # -----------------------------------------------------------------------
+      - name: Contrôler la version
+        id: version
+        working-directory: packages/survey
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          echo "name=$NAME"       >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION"    >> "$GITHUB_OUTPUT"
+          echo "Package : $NAME@$VERSION"
+
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "::error::$NAME@$VERSION existe déjà sur npm."
+            echo "Fusionnez la PR « Version Packages » pour incrémenter la version avant de publier."
+            exit 1
+          fi
+          echo "Version disponible sur le registre."
+
+      # -----------------------------------------------------------------------
+      # La provenance npm exige un dépôt PUBLIC et un package PUBLIC.
+      # Sur un dépôt privé, l'attestation échoue ; on la désactive au lieu de
+      # faire tomber la publication.
+      # -----------------------------------------------------------------------
+      - name: Déterminer l’option de provenance
+        id: provenance
+        run: |
+          if [ "${{ github.event.repository.private }}" = "false" ]; then
+            echo "flag=--provenance" >> "$GITHUB_OUTPUT"
+            echo "Dépôt public : attestation de provenance activée."
+          else
+            echo "flag=" >> "$GITHUB_OUTPUT"
+            echo "::notice::Dépôt privé — provenance désactivée. Rendez le dépôt public pour l’activer."
+          fi
+
+      # -----------------------------------------------------------------------
+      # Simulation.
+      # -----------------------------------------------------------------------
+      - name: Simulation de publication
+        if: inputs.dry_run
+        working-directory: packages/survey
+        run: |
+          npm publish --dry-run --access public --tag "${{ inputs.tag }}" ${{ steps.provenance.outputs.flag }}
+          {
+            echo "### 🧪 Simulation — rien n’a été publié"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Package | \`${{ steps.version.outputs.name }}\` |"
+            echo "| Version | \`${{ steps.version.outputs.version }}\` |"
+            echo "| Étiquette | \`${{ inputs.tag }}\` |"
+            echo ""
+            echo "Relancez ce workflow avec **Simulation décochée** pour publier."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # -----------------------------------------------------------------------
+      # Publication réelle.
+      # -----------------------------------------------------------------------
+      - name: Publier
+        if: '!inputs.dry_run'
+        working-directory: packages/survey
+        run: npm publish --access public --tag "${{ inputs.tag }}" ${{ steps.provenance.outputs.flag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Créer le tag et la release GitHub
+        if: '!inputs.dry_run'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
+          NAME: ${{ steps.version.outputs.name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "$NAME@$VERSION"
+          git push origin "$TAG"
+
+          NOTES="packages/survey/CHANGELOG.md"
+          if [ -f "$NOTES" ]; then
+            # La section de la version courante s'arrête au titre de niveau 2 suivant.
+            awk "/^## $VERSION\$/{flag=1;next} /^## /{flag=0} flag" "$NOTES" > release-notes.md
+          fi
+          [ -s release-notes.md ] || echo "Publication de \`$NAME@$VERSION\`." > release-notes.md
+          echo "" >> release-notes.md
+          echo "\`\`\`bash" >> release-notes.md
+          echo "npm install $NAME@$VERSION" >> release-notes.md
+          echo "\`\`\`" >> release-notes.md
+
+          gh release create "$TAG" --title "$NAME@$VERSION" --notes-file release-notes.md
+
+      - name: Résumé
+        if: '!inputs.dry_run'
+        run: |
+          {
+            echo "### ✅ Publié"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Package | \`${{ steps.version.outputs.name }}\` |"
+            echo "| Version | \`${{ steps.version.outputs.version }}\` |"
+            echo "| Étiquette | \`${{ inputs.tag }}\` |"
+            echo "| npm | https://www.npmjs.com/package/${{ steps.version.outputs.name }} |"
+            echo ""
+            echo '```bash'
+            echo "npm install ${{ steps.version.outputs.name }}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

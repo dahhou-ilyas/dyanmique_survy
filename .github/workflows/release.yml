@@ -1,0 +1,71 @@
+name: Release — PR de version
+
+# Ce workflow NE PUBLIE PAS.
+#
+# Il maintient une pull request « Version Packages » qui, à chaque push sur
+# master, agrège les changesets en attente, calcule le prochain numéro de
+# version et met à jour le CHANGELOG.
+#
+# Fusionner cette PR = décider de figer une version. La publication elle-même
+# se déclenche à la main, via le workflow « Publish ». Cette séparation est
+# volontaire : elle laisse un point d'arrêt humain entre « la version est prête »
+# et « la version part sur le registre public ».
+
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # créer la branche et le commit de version
+  pull-requests: write # ouvrir et mettre à jour la PR
+
+jobs:
+  version:
+    name: Mettre à jour la PR de version
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Historique complet : changesets en a besoin pour lier les commits
+          # aux entrées du CHANGELOG.
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Installer les dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Créer ou mettre à jour la PR de version
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+          title: 'chore: préparer la prochaine version'
+          commit: 'chore: mettre à jour les versions et le CHANGELOG'
+          # `publish` est volontairement absent : sans lui, l'action se contente
+          # de gérer la PR de version et ne touche jamais au registre npm.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Résumé
+        run: |
+          if [ "${{ steps.changesets.outputs.hasChangesets }}" = "true" ]; then
+            echo "### 📦 Une PR de version est ouverte" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Fusionnez-la pour figer la version, puis lancez le workflow **Publish**." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### Aucun changeset en attente" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo 'Décrivez vos modifications avec `pnpm changeset` avant de préparer une version.' >> "$GITHUB_STEP_SUMMARY"
+          fi

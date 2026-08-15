@@ -1,0 +1,191 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  # Permet de relancer la CI à la main depuis l'onglet Actions.
+  workflow_dispatch:
+
+# Annule les exécutions superflues : sur une PR poussée trois fois de suite,
+# seule la dernière compte.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Principe de moindre privilège : la CI n'a besoin que de lire le dépôt.
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Contrôles statiques — rapides, ils échouent en premier et coûtent le moins.
+  # ---------------------------------------------------------------------------
+  quality:
+    name: Lint · Format · Types
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Installer les dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: ESLint
+        run: pnpm lint
+
+      - name: Prettier
+        run: pnpm format:check
+
+      - name: TypeScript
+        run: pnpm typecheck
+
+  # ---------------------------------------------------------------------------
+  # Tests — matrice de versions de Node.
+  # 20 est la version de développement, 22 celle qui publiera (elle seule sait
+  # faire du « trusted publishing »). Tester les deux évite une surprise le jour
+  # de la release.
+  # ---------------------------------------------------------------------------
+  test:
+    name: Tests (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - name: Installer les dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Tests et couverture
+        run: pnpm test:coverage
+
+      - name: Publier le rapport de couverture
+        if: matrix.node == 20
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: packages/survey/coverage
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------
+  # Build et validation du paquet publiable.
+  # C'est ici qu'on vérifie ce que verra réellement un consommateur : le champ
+  # `exports`, la résolution des types en ESM et en CJS, le contenu du tarball.
+  # ---------------------------------------------------------------------------
+  package:
+    name: Build · publint · attw
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Installer les dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Construire le package
+        run: pnpm build
+
+      - name: Valider le paquet (publint + arethetypeswrong)
+        run: pnpm --filter @dahhou-ilyas/survey verify:pkg
+
+      - name: Construire le bac à sable
+        run: pnpm --filter playground build
+
+      - name: Créer le tarball
+        run: pnpm --filter @dahhou-ilyas/survey exec npm pack --pack-destination ../..
+
+      - name: Conserver le tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-tarball
+          path: '*.tgz'
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------
+  # Test d'intégration : on installe le tarball dans un projet React 18 NEUF,
+  # hors du monorepo.
+  #
+  # C'est le seul contrôle qui attrape les erreurs de packaging réelles — champ
+  # `exports` incomplet, fichier oublié dans `files`, dépendance manquante,
+  # deuxième copie de React. Un test interne au monorepo ne les verrait jamais,
+  # puisqu'il résout tout depuis les sources.
+  # ---------------------------------------------------------------------------
+  consumer:
+    name: Installation dans un projet React 18 vierge
+    runs-on: ubuntu-latest
+    needs: package
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Récupérer le tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: package-tarball
+          path: tarball
+
+      - name: Créer le projet consommateur
+        run: bash .github/scripts/consumer-smoke-test.sh
+
+  # ---------------------------------------------------------------------------
+  # Garde-fou de taille : le point d'entrée /runtime ne doit pas embarquer le
+  # builder. Une régression ici ne casse aucun test mais triple le poids du
+  # bundle de l'application cliente — exactement le genre de dérive qu'on ne
+  # remarque que six mois trop tard.
+  # ---------------------------------------------------------------------------
+  bundle-size:
+    name: Budget de taille du runtime
+    runs-on: ubuntu-latest
+    needs: package
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Récupérer le tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: package-tarball
+          path: tarball
+
+      - name: Mesurer et contrôler
+        run: bash .github/scripts/bundle-size-check.sh
