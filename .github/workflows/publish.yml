@@ -76,7 +76,7 @@ jobs:
         run: pnpm build
 
       - name: Valider le paquet
-        run: pnpm --filter @dahhou-ilyas/survey verify:pkg
+        run: pnpm --filter @dahhouilyas/survey verify:pkg
 
       # -----------------------------------------------------------------------
       # La version est-elle déjà sur npm ?

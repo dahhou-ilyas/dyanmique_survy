@@ -1,7 +1,7 @@
 /**
  * Thème du builder — inclut le thème du moteur de rendu, dont l'aperçu a besoin.
  *
- *   import '@dahhou-ilyas/survey/themes/builder.css';
+ *   import '@dahhouilyas/survey/themes/builder.css';
  *
  * À importer dans le back-office uniquement. L'application qui affiche les
  * sondages se contente de `themes/default.css`.

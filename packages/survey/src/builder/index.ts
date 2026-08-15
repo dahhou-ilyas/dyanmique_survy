@@ -1,12 +1,12 @@
 /**
- * `@dahhou-ilyas/survey/builder` — créateur de sondages en glisser-déposer.
+ * `@dahhouilyas/survey/builder` — créateur de sondages en glisser-déposer.
  *
  * Point d'entrée destiné au **back-office**. L'application qui affiche les
- * sondages n'importe que `@dahhou-ilyas/survey/runtime` : rien de ce module (dnd-kit,
+ * sondages n'importe que `@dahhouilyas/survey/runtime` : rien de ce module (dnd-kit,
  * éditeurs de propriétés) n'entre alors dans son bundle.
  *
- *   import { SurveyBuilder } from '@dahhou-ilyas/survey/builder';
- *   import '@dahhou-ilyas/survey/themes/builder.css';
+ *   import { SurveyBuilder } from '@dahhouilyas/survey/builder';
+ *   import '@dahhouilyas/survey/themes/builder.css';
  */
 
 export { SurveyBuilder, type SurveyBuilderProps } from './SurveyBuilder';

@@ -1,12 +1,12 @@
 /**
- * `@dahhou-ilyas/survey/runtime` — moteur de rendu React.
+ * `@dahhouilyas/survey/runtime` — moteur de rendu React.
  *
  * Point d'entrée à utiliser dans l'application qui **affiche** les sondages
- * (interstitiel après authentification). Le builder vit dans `@dahhou-ilyas/survey/builder`
+ * (interstitiel après authentification). Le builder vit dans `@dahhouilyas/survey/builder`
  * et n'est jamais tiré dans ce bundle.
  *
- *   import { SurveyRenderer } from '@dahhou-ilyas/survey/runtime';
- *   import '@dahhou-ilyas/survey/themes/default.css';
+ *   import { SurveyRenderer } from '@dahhouilyas/survey/runtime';
+ *   import '@dahhouilyas/survey/themes/default.css';
  */
 
 export { SurveyRenderer, type SurveyRendererProps } from './SurveyRenderer';

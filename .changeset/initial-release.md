@@ -1,5 +1,5 @@
 ---
-'@dahhou-ilyas/survey': minor
+'@dahhouilyas/survey': minor
 ---
 
 Première version du module de sondage.

@@ -1,12 +1,12 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { SurveyBuilder } from '@dahhou-ilyas/survey/builder';
+import { SurveyBuilder } from '@dahhouilyas/survey/builder';
 import {
   parseSurvey,
   type Locale,
   type SurveyDefinition,
   type SurveyResult,
-} from '@dahhou-ilyas/survey/core';
-import { SurveyRenderer } from '@dahhou-ilyas/survey/runtime';
+} from '@dahhouilyas/survey/core';
+import { SurveyRenderer } from '@dahhouilyas/survey/runtime';
 import { SAMPLE_LABELS, samples, type SampleKey } from './samples';
 
 type View = 'builder' | 'runtime';
@@ -40,7 +40,7 @@ export function App(): ReactNode {
   return (
     <div className="app">
       <header className="app__header">
-        <h1 className="app__brand">@dahhou-ilyas/survey</h1>
+        <h1 className="app__brand">@dahhouilyas/survey</h1>
 
         <nav className="app__nav">
           <button

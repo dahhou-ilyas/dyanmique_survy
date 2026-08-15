@@ -57,9 +57,9 @@ mkdir -p src
 # L'application cliente : n'importe QUE le runtime.
 cat > src/runtime-only.tsx <<'TSX'
 import { createRoot } from 'react-dom/client';
-import { SurveyRenderer } from '@dahhou-ilyas/survey/runtime';
-import type { SurveyDefinition, SurveyResult } from '@dahhou-ilyas/survey/core';
-import '@dahhou-ilyas/survey/themes/default.css';
+import { SurveyRenderer } from '@dahhouilyas/survey/runtime';
+import type { SurveyDefinition, SurveyResult } from '@dahhouilyas/survey/core';
+import '@dahhouilyas/survey/themes/default.css';
 
 const definition: SurveyDefinition = {
   schemaVersion: 1,
@@ -93,8 +93,8 @@ TSX
 cat > src/builder-app.tsx <<'TSX'
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { SurveyBuilder, createSurvey } from '@dahhou-ilyas/survey/builder';
-import '@dahhou-ilyas/survey/themes/builder.css';
+import { SurveyBuilder, createSurvey } from '@dahhouilyas/survey/builder';
+import '@dahhouilyas/survey/themes/builder.css';
 
 function App() {
   const [survey, setSurvey] = useState(createSurvey());
@@ -147,7 +147,7 @@ echo "::endgroup::"
 #    `core` n'a aucune dépendance à React : il doit tourner côté serveur.
 # --------------------------------------------------------------------------
 cat > cjs-check.cjs <<'JS'
-const core = require('@dahhou-ilyas/survey/core');
+const core = require('@dahhouilyas/survey/core');
 const survey = core.createSurvey({ id: 'cjs' });
 survey.pages[0].elements = [core.createQuestion('text', 'nom')];
 const engine = new core.SurveyEngine({ definition: core.parseSurvey(survey) });
@@ -162,7 +162,7 @@ JS
 cat > esm-check.mjs <<'JS'
 import {
   createSurvey, createQuestion, parseSurvey, SurveyEngine, validateSurveyDefinition,
-} from '@dahhou-ilyas/survey/core';
+} from '@dahhouilyas/survey/core';
 const survey = createSurvey({ id: 'esm' });
 survey.pages[0].elements = [createQuestion('rating', 'note')];
 const parsed = parseSurvey(survey);
@@ -186,7 +186,7 @@ echo "::endgroup::"
 #    chez le consommateur. La cause est toujours la même : React déclaré en
 #    dependency au lieu de peerDependency.
 # --------------------------------------------------------------------------
-if [ -d "node_modules/@dahhou-ilyas/survey/node_modules/react" ]; then
+if [ -d "node_modules/@dahhouilyas/survey/node_modules/react" ]; then
   echo "❌ Le package embarque sa propre copie de React."
   echo "   Vérifiez que react est bien en peerDependencies et externalisé au build."
   exit 1

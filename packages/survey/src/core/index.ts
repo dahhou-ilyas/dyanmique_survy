@@ -1,5 +1,5 @@
 /**
- * `@dahhou-ilyas/survey/core` — modèle, moteur d'expressions, validation et moteur d'exécution.
+ * `@dahhouilyas/survey/core` — modèle, moteur d'expressions, validation et moteur d'exécution.
  * Aucune dépendance à React : ce point d'entrée est utilisable côté Node
  * (validation d'un JSON reçu par API, calcul de résultats) comme côté navigateur.
  */

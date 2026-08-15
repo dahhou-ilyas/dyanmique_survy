@@ -42,7 +42,7 @@ JSX
 # Mesure : React + le moteur de rendu.
 cat > src/runtime.jsx <<'JSX'
 import { createRoot } from 'react-dom/client';
-import { SurveyRenderer } from '@dahhou-ilyas/survey/runtime';
+import { SurveyRenderer } from '@dahhouilyas/survey/runtime';
 
 const definition = {
   schemaVersion: 1,
@@ -108,7 +108,7 @@ echo ""
 echo "┌──────────────────────────────────────────────┐"
 printf "│ React seul                    %6s Ko gzip │\n" "$((REACT_O / 1024))"
 printf "│ React + /runtime              %6s Ko gzip │\n" "$((RUNTIME_O / 1024))"
-printf "│ Apport de @dahhou-ilyas/survey %5s Ko gzip │\n" "$DELTA_KO"
+printf "│ Apport de @dahhouilyas/survey %5s Ko gzip │\n" "$DELTA_KO"
 printf "│ Budget                        %6s Ko gzip │\n" "$BUDGET_KO"
 echo "└──────────────────────────────────────────────┘"
 echo ""

@@ -1,7 +1,7 @@
 /**
  * Thème par défaut du moteur de rendu.
  *
- *   import '@dahhou-ilyas/survey/themes/default.css';
+ *   import '@dahhouilyas/survey/themes/default.css';
  *
  * Passer en sombre : ajouter `data-edbs-theme="dark"` sur le conteneur
  * (`<SurveyRenderer theme="dark" />` le fait pour vous).

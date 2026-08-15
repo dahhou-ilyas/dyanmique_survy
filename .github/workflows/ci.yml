@@ -123,13 +123,13 @@ jobs:
         run: pnpm build
 
       - name: Valider le paquet (publint + arethetypeswrong)
-        run: pnpm --filter @dahhou-ilyas/survey verify:pkg
+        run: pnpm --filter @dahhouilyas/survey verify:pkg
 
       - name: Construire le bac à sable
         run: pnpm --filter playground build
 
       - name: Créer le tarball
-        run: pnpm --filter @dahhou-ilyas/survey exec npm pack --pack-destination ../..
+        run: pnpm --filter @dahhouilyas/survey exec npm pack --pack-destination ../..
 
       - name: Conserver le tarball
         uses: actions/upload-artifact@v4

@@ -1,6 +1,6 @@
 # sondageBuilder
 
-Monorepo du **module de sondage** : le package `@dahhou-ilyas/survey` et son bac à sable.
+Monorepo du **module de sondage** : le package `@dahhouilyas/survey` et son bac à sable.
 
 | Dossier           | Rôle                                                                                      |
 | ----------------- | ----------------------------------------------------------------------------------------- |
@@ -20,7 +20,7 @@ builder — conçu pour être consommé comme dépendance :
 // package.json du projet parent
 {
   "dependencies": {
-    "@dahhou-ilyas/survey": "^0.1.0",
+    "@dahhouilyas/survey": "^0.1.0",
   },
 }
 ```
@@ -56,8 +56,8 @@ pnpm dev        # bac à sable sur http://localhost:5173
 - **TypeScript 6**, pas 7 : le compilateur natif de TS 7 n'expose pas encore d'API
   programmatique stable, dont dépendent `typescript-eslint` et la génération des
   déclarations. À revoir quand TS 7.1 sera disponible.
-- **Un seul package, plusieurs points d'entrée** : `@dahhou-ilyas/survey/runtime` pour l'application
-  bancaire, `@dahhou-ilyas/survey/builder` pour le back-office. Le builder et ses dépendances
+- **Un seul package, plusieurs points d'entrée** : `@dahhouilyas/survey/runtime` pour l'application
+  bancaire, `@dahhouilyas/survey/builder` pour le back-office. Le builder et ses dépendances
   (`@dnd-kit`, `zustand`, `immer`, `zod`) n'entrent jamais dans le bundle client —
   [vérifié par la mesure](./packages/survey/README.md#points-dentrée).
 - **Pas de CSS-in-JS, pas de Tailwind dans le package** : des variables CSS sur `.edbs-root`,
@@ -69,10 +69,10 @@ pnpm dev        # bac à sable sur http://localhost:5173
 
 ## Publication
 
-Le package est publié sur npm sous le nom **`@dahhou-ilyas/survey`**, licence MIT.
+Le package est publié sur npm sous le nom **`@dahhouilyas/survey`**, licence MIT.
 
 ```bash
-npm install @dahhou-ilyas/survey
+npm install @dahhouilyas/survey
 ```
 
 Trois workflows GitHub Actions couvrent le cycle :

@@ -1,4 +1,4 @@
-# @dahhou-ilyas/survey
+# @dahhouilyas/survey
 
 Module de sondage pour applications React : **modèle JSON**, **moteur de rendu** et
 **builder en glisser-déposer**, dans un seul package à points d'entrée séparés.
@@ -20,7 +20,7 @@ cahier des charges. Concrètement : campagnes, priorités, ciblage par numéro c
 ## Installation
 
 ```bash
-npm install @dahhou-ilyas/survey
+npm install @dahhouilyas/survey
 ```
 
 `react` et `react-dom` sont des **peer dependencies** (`^18.2.0`) : le package n'embarque
@@ -28,13 +28,13 @@ jamais sa propre copie de React.
 
 ## Points d'entrée
 
-| Import                              | Pour qui                                   | Contenu                                             |
-| ----------------------------------- | ------------------------------------------ | --------------------------------------------------- |
-| `@dahhou-ilyas/survey/runtime`      | l'application qui **affiche** les sondages | `SurveyRenderer`, hooks, composants de champ        |
-| `@dahhou-ilyas/survey/builder`      | le **back-office**                         | `SurveyBuilder`, store, éditeurs                    |
-| `@dahhou-ilyas/survey/core`         | les deux, et le serveur                    | modèle, expressions, validation, `SurveyEngine`     |
-| `@dahhou-ilyas/survey`              | commodité                                  | `core` + `runtime` (jamais le builder)              |
-| `@dahhou-ilyas/survey/themes/*.css` | —                                          | `default`, `builder`, `compact`, `dark-auto`, `edb` |
+| Import                             | Pour qui                                   | Contenu                                             |
+| ---------------------------------- | ------------------------------------------ | --------------------------------------------------- |
+| `@dahhouilyas/survey/runtime`      | l'application qui **affiche** les sondages | `SurveyRenderer`, hooks, composants de champ        |
+| `@dahhouilyas/survey/builder`      | le **back-office**                         | `SurveyBuilder`, store, éditeurs                    |
+| `@dahhouilyas/survey/core`         | les deux, et le serveur                    | modèle, expressions, validation, `SurveyEngine`     |
+| `@dahhouilyas/survey`              | commodité                                  | `core` + `runtime` (jamais le builder)              |
+| `@dahhouilyas/survey/themes/*.css` | —                                          | `default`, `builder`, `compact`, `dark-auto`, `edb` |
 
 Le builder n'est pas ré-exporté depuis la racine : une application qui n'importe que
 `/runtime` ne télécharge ni `@dnd-kit`, ni les éditeurs de propriétés.
@@ -45,8 +45,8 @@ Le builder n'est pas ré-exporté depuis la racine : une application qui n'impor
 ## Afficher un sondage
 
 ```tsx
-import { SurveyRenderer } from '@dahhou-ilyas/survey/runtime';
-import '@dahhou-ilyas/survey/themes/default.css';
+import { SurveyRenderer } from '@dahhouilyas/survey/runtime';
+import '@dahhouilyas/survey/themes/default.css';
 
 <SurveyRenderer
   definition={campagne.definition} // le JSON stocké en base
@@ -100,8 +100,8 @@ reste néanmoins en mémoire, pour être restaurée si l'utilisateur revient en 
 ## Construire un sondage
 
 ```tsx
-import { SurveyBuilder, createSurvey } from '@dahhou-ilyas/survey/builder';
-import '@dahhou-ilyas/survey/themes/builder.css';
+import { SurveyBuilder, createSurvey } from '@dahhouilyas/survey/builder';
+import '@dahhouilyas/survey/themes/builder.css';
 
 const [survey, setSurvey] = useState(createSurvey());
 
@@ -259,8 +259,8 @@ Un type de question = un **descripteur** et un **composant**. Le builder et le r
 lisent que le registre : ni l'un ni l'autre n'a besoin d'être modifié.
 
 ```tsx
-import { questionRegistry } from '@dahhou-ilyas/survey/core';
-import { defaultFieldComponents } from '@dahhou-ilyas/survey/runtime';
+import { questionRegistry } from '@dahhouilyas/survey/core';
+import { defaultFieldComponents } from '@dahhouilyas/survey/runtime';
 
 questionRegistry.register({
   type: 'signature',
@@ -299,7 +299,7 @@ Le package ne s'en occupe pas, mais expose les types que le backend doit reflét
 | Contrôle d'un JSON reçu par API                       | `parseSurvey` / `safeParseSurvey` |
 | Contrôle de conception avant publication              | `validateSurveyDefinition`        |
 
-`@dahhou-ilyas/survey/core` n'a aucune dépendance à React : ces fonctions s'utilisent telles quelles
+`@dahhouilyas/survey/core` n'a aucune dépendance à React : ces fonctions s'utilisent telles quelles
 dans un service Node.
 
 ## Développement

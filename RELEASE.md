@@ -1,7 +1,17 @@
-# Publier `@dahhou-ilyas/survey`
+# Publier `@dahhouilyas/survey`
 
 > Le pipeline est en place, mais **aucune publication n'est automatique**. Rien ne part sur npm
 > tant que vous ne lancez pas le workflow **Publish** à la main.
+
+> [!IMPORTANT]
+> **Deux identifiants voisins, à ne pas confondre.**
+>
+> |                   | Identifiant                 | Où il apparaît                                                        |
+> | ----------------- | --------------------------- | --------------------------------------------------------------------- |
+> | Compte **npm**    | `dahhouilyas` (sans tiret)  | le scope `@dahhouilyas/survey`, la portée du jeton                    |
+> | Compte **GitHub** | `dahhou-ilyas` (avec tiret) | les URL du dépôt, le champ « Organization or user » de la config OIDC |
+>
+> Une erreur ici produit un `E404` opaque au moment du publish.
 
 ---
 
@@ -9,8 +19,8 @@
 
 ### 1.1 Créer le jeton npm
 
-1. Se connecter sur [npmjs.com](https://www.npmjs.com) avec le compte **`dahhou-ilyas`**
-   (le scope `@dahhou-ilyas` correspond à votre nom d'utilisateur : rien à créer).
+1. Se connecter sur [npmjs.com](https://www.npmjs.com) avec le compte **`dahhouilyas`**
+   (le scope `@dahhouilyas` correspond à votre nom d'utilisateur : rien à créer).
 2. **Access Tokens → Generate New Token → Granular Access Token**.
 3. Réglages :
 
@@ -19,7 +29,7 @@
    | Nom                 | `github-actions-survey` |
    | Expiration          | 90 jours (à renouveler) |
    | Packages and scopes | **Read and write**      |
-   | Select packages     | `@dahhou-ilyas/*`       |
+   | Select packages     | `@dahhouilyas/*`        |
    | Organizations       | aucune                  |
 
    > Préférez un jeton **granulaire** à un jeton classique : sa portée est limitée à vos
@@ -138,8 +148,8 @@ L'entrée **Étiquette** accepte `next` et `beta`. Une version publiée sous une
 que `latest` n'est pas installée par défaut :
 
 ```bash
-npm install @dahhou-ilyas/survey          # installe la dernière « latest »
-npm install @dahhou-ilyas/survey@next     # installe explicitement la préversion
+npm install @dahhouilyas/survey          # installe la dernière « latest »
+npm install @dahhouilyas/survey@next     # installe explicitement la préversion
 ```
 
 ---
@@ -234,15 +244,15 @@ Avec le trusted publishing, la provenance est générée automatiquement — le 
 
 ## 5. En cas de problème
 
-| Symptôme                                                             | Cause et remède                                                                                                                                 |
-| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `E402 Payment Required`                                              | Le package scopé est traité comme privé. Vérifier `publishConfig.access = "public"` dans `packages/survey/package.json`.                        |
-| `E403 Forbidden`                                                     | Jeton expiré, révoqué, ou sans droit d'écriture sur `@dahhou-ilyas/*`. Régénérer et remplacer le secret.                                        |
-| `E404` sur un scope                                                  | Le scope ne vous appartient pas. `@dahhou-ilyas` correspond à votre nom d'utilisateur npm : vérifier que vous êtes connecté avec **ce** compte. |
-| `You cannot publish over the previously published versions`          | La version existe déjà. Fusionner la PR de version pour l'incrémenter.                                                                          |
-| `GitHub Actions is not permitted to create or approve pull requests` | Cocher l'option décrite en 1.3.                                                                                                                 |
-| Provenance en échec                                                  | Le dépôt est privé. Soit le rendre public, soit laisser le workflow désactiver l'attestation — il le fait tout seul.                            |
-| `ERR_PNPM_OUTDATED_LOCKFILE`                                         | `pnpm-lock.yaml` n'est pas à jour. Lancer `pnpm install` en local et commiter le lockfile.                                                      |
+| Symptôme                                                             | Cause et remède                                                                                                                                |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `E402 Payment Required`                                              | Le package scopé est traité comme privé. Vérifier `publishConfig.access = "public"` dans `packages/survey/package.json`.                       |
+| `E403 Forbidden`                                                     | Jeton expiré, révoqué, ou sans droit d'écriture sur `@dahhouilyas/*`. Régénérer et remplacer le secret.                                        |
+| `E404` sur un scope                                                  | Le scope ne vous appartient pas. `@dahhouilyas` correspond à votre nom d'utilisateur npm : vérifier que vous êtes connecté avec **ce** compte. |
+| `You cannot publish over the previously published versions`          | La version existe déjà. Fusionner la PR de version pour l'incrémenter.                                                                         |
+| `GitHub Actions is not permitted to create or approve pull requests` | Cocher l'option décrite en 1.3.                                                                                                                |
+| Provenance en échec                                                  | Le dépôt est privé. Soit le rendre public, soit laisser le workflow désactiver l'attestation — il le fait tout seul.                           |
+| `ERR_PNPM_OUTDATED_LOCKFILE`                                         | `pnpm-lock.yaml` n'est pas à jour. Lancer `pnpm install` en local et commiter le lockfile.                                                     |
 
 ### Retirer une version publiée
 
@@ -250,7 +260,7 @@ Avec le trusted publishing, la provenance est générée automatiquement — le 
 de version consommé ne peut **jamais** être réutilisé. Au-delà, la seule option est :
 
 ```bash
-npm deprecate @dahhou-ilyas/survey@0.1.0 "Version retirée, utilisez la 0.1.1"
+npm deprecate @dahhouilyas/survey@0.1.0 "Version retirée, utilisez la 0.1.1"
 ```
 
 C'est précisément pour cette irréversibilité que la publication est manuelle et que la

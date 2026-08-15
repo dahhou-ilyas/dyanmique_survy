@@ -10,13 +10,13 @@ export default defineConfig({
   resolve: {
     // En développement on tape directement dans les sources du package : HMR
     // immédiat, pas de build intermédiaire. L'ordre compte — les alias les plus
-    // spécifiques doivent précéder `@dahhou-ilyas/survey`, qui est leur préfixe.
+    // spécifiques doivent précéder `@dahhouilyas/survey`, qui est leur préfixe.
     alias: {
-      '@dahhou-ilyas/survey/core': packageSrc('src/core/index.ts'),
-      '@dahhou-ilyas/survey/runtime': packageSrc('src/runtime/index.ts'),
-      '@dahhou-ilyas/survey/builder': packageSrc('src/builder/index.ts'),
-      '@dahhou-ilyas/survey/themes': packageSrc('styles'),
-      '@dahhou-ilyas/survey': packageSrc('src/index.ts'),
+      '@dahhouilyas/survey/core': packageSrc('src/core/index.ts'),
+      '@dahhouilyas/survey/runtime': packageSrc('src/runtime/index.ts'),
+      '@dahhouilyas/survey/builder': packageSrc('src/builder/index.ts'),
+      '@dahhouilyas/survey/themes': packageSrc('styles'),
+      '@dahhouilyas/survey': packageSrc('src/index.ts'),
     },
   },
 });
