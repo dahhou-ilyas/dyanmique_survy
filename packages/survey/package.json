@@ -1,6 +1,6 @@
 {
   "name": "@dahhouilyas/survey",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Module de sondage : modèle JSON, moteur de rendu React et builder drag & drop — sans dépendance réseau.",
   "license": "MIT",
   "author": "Ilyas Dahhou",
