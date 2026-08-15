@@ -179,7 +179,32 @@ runtime. C'est la seule garde qui protège la promesse des points d'entrée sép
 régression de ce type ne casse aucun test, elle se contente de tripler le poids du bundle de
 l'application cliente.
 
-Les deux scripts sont dans `.github/scripts/` et **s'exécutent tels quels en local** :
+### Reproduire la CI en local
+
+```bash
+pnpm verify
+```
+
+Cette commande enchaîne exactement ce que fait la CI, **dans le même ordre** :
+
+```
+pnpm install --frozen-lockfile   ← attrape un pnpm-lock.yaml désynchronisé
+pnpm lint
+pnpm format:check
+pnpm typecheck
+pnpm changeset status            ← attrape une chaîne de release cassée
+pnpm test
+pnpm build
+publint && attw --pack .
+```
+
+Le premier maillon est celui qu'on oublie : après avoir renommé un package ou ajouté une
+dépendance, `pnpm-lock.yaml` doit être régénéré **et commité**. En local, les commandes
+continuent de fonctionner avec le `node_modules` déjà installé ; en CI, `--frozen-lockfile`
+refuse de partir et l'installation échoue avec `ERR_PNPM_OUTDATED_LOCKFILE`.
+
+Les deux scripts d'intégration sont dans `.github/scripts/` et **s'exécutent tels quels en
+local** :
 
 ```bash
 pnpm build

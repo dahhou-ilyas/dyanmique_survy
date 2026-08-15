@@ -35,7 +35,7 @@ importers:
 
   apps/playground:
     dependencies:
-      '@dahhou-ilyas/survey':
+      '@dahhouilyas/survey':
         specifier: workspace:*
         version: link:../../packages/survey
       react:

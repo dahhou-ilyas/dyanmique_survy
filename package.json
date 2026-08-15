@@ -19,7 +19,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @dahhouilyas/survey verify:pkg",
+    "verify": "pnpm install --frozen-lockfile && pnpm lint && pnpm format:check && pnpm typecheck && pnpm changeset status && pnpm test && pnpm build && pnpm --filter @dahhouilyas/survey verify:pkg",
     "changeset": "changeset",
     "version": "changeset version",
     "publish:dry-run": "pnpm build && pnpm --filter @dahhouilyas/survey exec npm publish --dry-run --access public",
