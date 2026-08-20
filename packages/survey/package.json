@@ -114,12 +114,13 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsup && node scripts/copy-styles.mjs",
+    "generate": "node scripts/build-styles.mjs",
+    "build": "pnpm generate && tsup && node scripts/copy-styles.mjs",
     "dev": "tsup --watch",
-    "test": "vitest run",
+    "test": "pnpm generate && vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
+    "test:coverage": "pnpm generate && vitest run --coverage",
+    "typecheck": "pnpm generate && tsc --noEmit",
     "verify:pkg": "publint && attw --pack ."
   },
   "peerDependencies": {

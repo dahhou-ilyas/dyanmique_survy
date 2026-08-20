@@ -5,7 +5,14 @@ import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
   {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', '**/*.tgz'],
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/coverage/**',
+      '**/*.tgz',
+      // Fichier généré au build : pas de lint, pas de format.
+      '**/styles.generated.ts',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -31,6 +38,11 @@ export default tseslint.config(
       'no-implied-eval': 'error',
       'no-new-func': 'error',
     },
+  },
+  {
+    // Scripts de build : ils tournent dans Node, hors du navigateur.
+    files: ['**/scripts/**/*.mjs', '*.config.{js,mjs}'],
+    languageOptions: { globals: globals.node },
   },
   {
     files: ['**/*.test.{ts,tsx}', '**/tests/**'],
