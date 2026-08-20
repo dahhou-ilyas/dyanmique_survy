@@ -194,5 +194,37 @@ jobs:
           name: package-tarball
           path: tarball
 
-      - name: Mesurer et contrôler
+      - name: Mesurer et contrôler le runtime
         run: bash .github/scripts/bundle-size-check.sh
+
+  # ---------------------------------------------------------------------------
+  # Poids du Web Component.
+  #
+  # `element.js` est chargé par une balise <script> : son poids est payé
+  # intégralement par chaque page, sans partage possible. Le contrôle vérifie
+  # aussi qu'il reste autonome — si React y remplaçait Preact, il pèserait dix
+  # fois plus et cesserait de fonctionner sans bundler.
+  # ---------------------------------------------------------------------------
+  element-size:
+    name: Budget de taille du Web Component
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Installer les dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Construire le package
+        run: pnpm build
+
+      - name: Mesurer et contrôler
+        run: bash .github/scripts/element-size-check.sh

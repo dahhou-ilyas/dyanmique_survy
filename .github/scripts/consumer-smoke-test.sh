@@ -193,5 +193,82 @@ if [ -d "node_modules/@dahhouilyas/survey/node_modules/react" ]; then
 fi
 echo "Copie unique de React ✔ ($(node -p "require('react/package.json').version"))"
 
+# --------------------------------------------------------------------------
+# 5. Le Web Component fonctionne-t-il SANS framework et SANS bundler ?
+#    C'est la promesse littérale de « utilisable dans n'importe quel projet » :
+#    une balise <script>, une balise <edb-survey>, rien d'autre.
+# --------------------------------------------------------------------------
+cat > sans-framework.html <<'HTML'
+<!doctype html>
+<html lang="fr">
+  <body>
+    <edb-survey id="s"></edb-survey>
+    <script type="module">
+      import './node_modules/@dahhouilyas/survey/dist/element.js';
+      document.getElementById('s').definition = {
+        schemaVersion: 1,
+        id: 'sans-framework',
+        title: 'Sondage',
+        settings: {
+          locale: 'fr', showProgressBar: 'off', showQuestionNumbers: 'off',
+          showPageTitles: true, checkErrorsMode: 'onNextPage',
+        },
+        pages: [{ id: 'p1', name: 'page1', elements: [
+          { id: 'q1', name: 'nom', type: 'text', title: 'Votre nom' },
+        ] }],
+      };
+    </script>
+  </body>
+</html>
+HTML
+
+echo "::group::Web Component sans framework"
+
+# Le bundle doit exister et être autonome — aucun import à résoudre par la page.
+BUNDLE=node_modules/@dahhouilyas/survey/dist/element.js
+[ -f "$BUNDLE" ] || { echo "❌ $BUNDLE absent du paquet publié"; exit 1; }
+
+if grep -qE "^\s*(import|export)[^;]*from ['\"][^./]" "$BUNDLE"; then
+  echo "❌ element.js comporte des imports externes : il n'est pas autonome."
+  grep -nE "^\s*(import|export)[^;]*from ['\"][^./]" "$BUNDLE" | head -3
+  exit 1
+fi
+
+# Exécution réelle du bundle dans un DOM, sans React ni bundler.
+npm install --no-fund --no-audit --no-save jsdom@^29 >/dev/null 2>&1
+node --input-type=module <<'JS'
+import { readFileSync } from 'node:fs';
+import { JSDOM } from 'jsdom';
+
+const dom = new JSDOM('<!doctype html><body><edb-survey id="s"></edb-survey></body>', {
+  runScripts: 'outside-only', pretendToBeVisual: true,
+});
+const { window } = dom;
+for (const cle of ['window', 'document', 'HTMLElement', 'customElements', 'CustomEvent', 'Node'])
+  globalThis[cle] = cle === 'window' ? window : window[cle];
+
+await import('./node_modules/@dahhouilyas/survey/dist/element.js');
+
+const el = window.document.getElementById('s');
+el.definition = {
+  schemaVersion: 1, id: 'sans-framework', title: 'Sondage',
+  settings: { locale: 'fr', showProgressBar: 'off', showQuestionNumbers: 'off',
+              showPageTitles: true, checkErrorsMode: 'onNextPage' },
+  pages: [{ id: 'p1', name: 'page1', elements: [
+    { id: 'q1', name: 'nom', type: 'text', title: 'Votre nom' } ] }],
+};
+
+await new Promise((r) => setTimeout(r, 50));
+
+const rendu = el.shadowRoot?.querySelector('div')?.textContent ?? '';
+if (!rendu.includes('Votre nom')) {
+  throw new Error('Le composant n\'a rien rendu : ' + JSON.stringify(rendu));
+}
+if (!el.engine) throw new Error('Le moteur n\'est pas exposé');
+console.log('Web Component sans framework ✔');
+JS
+echo "::endgroup::"
+
 echo ""
-echo "✅ Le package s'installe et fonctionne dans un projet React 18 vierge."
+echo "✅ Le package s'installe et fonctionne dans un projet React 18 vierge,"
+echo "   et son Web Component fonctionne sans framework ni bundler."
