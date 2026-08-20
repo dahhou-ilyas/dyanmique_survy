@@ -58,6 +58,16 @@
         "default": "./dist/core.cjs"
       }
     },
+    "./headless": {
+      "import": {
+        "types": "./dist/headless.d.ts",
+        "default": "./dist/headless.js"
+      },
+      "require": {
+        "types": "./dist/headless.d.cts",
+        "default": "./dist/headless.cjs"
+      }
+    },
     "./runtime": {
       "import": {
         "types": "./dist/runtime.d.ts",
@@ -94,6 +104,9 @@
       ],
       "builder": [
         "./dist/builder.d.ts"
+      ],
+      "headless": [
+        "./dist/headless.d.ts"
       ]
     }
   },

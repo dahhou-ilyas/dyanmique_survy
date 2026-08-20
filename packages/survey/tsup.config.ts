@@ -4,6 +4,7 @@ export default defineConfig({
   entry: {
     index: 'src/index.ts',
     core: 'src/core/index.ts',
+    headless: 'src/headless/index.ts',
     runtime: 'src/runtime/index.ts',
     builder: 'src/builder/index.ts',
   },
