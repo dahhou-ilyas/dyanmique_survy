@@ -56,10 +56,14 @@ pnpm dev        # bac à sable sur http://localhost:5173
 - **TypeScript 6**, pas 7 : le compilateur natif de TS 7 n'expose pas encore d'API
   programmatique stable, dont dépendent `typescript-eslint` et la génération des
   déclarations. À revoir quand TS 7.1 sera disponible.
-- **Un seul package, plusieurs points d'entrée** : `@dahhouilyas/survey/runtime` pour l'application
-  bancaire, `@dahhouilyas/survey/builder` pour le back-office. Le builder et ses dépendances
+- **Un seul package, plusieurs points d'entrée** : `/element` (Web Component, tout framework
+  ou aucun), `/runtime` (React), `/headless` (votre propre interface), `/builder` (back-office),
+  `/core` (modèle et moteur, utilisable côté serveur). Le builder et ses dépendances
   (`@dnd-kit`, `zustand`, `immer`, `zod`) n'entrent jamais dans le bundle client —
   [vérifié par la mesure](./packages/survey/README.md#points-dentrée).
+- **Le moteur ne dépend pas de React** : `core` ne l'importe pas une seule fois. C'est ce qui
+  a permis d'ajouter un mode headless et un Web Component autonome de 41 Ko sans réécrire un
+  seul composant de champ — l'entrée `/element` alias React vers Preact au build.
 - **Pas de CSS-in-JS, pas de Tailwind dans le package** : des variables CSS sur `.edbs-root`,
   qui n'imposent aucune configuration à l'application hôte et ne teintent pas ses styles.
 - **Aucune évaluation dynamique de code** : les expressions conditionnelles passent par un

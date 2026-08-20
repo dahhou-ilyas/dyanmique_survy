@@ -30,9 +30,11 @@ jamais sa propre copie de React.
 
 | Import                             | Pour qui                                   | Contenu                                             |
 | ---------------------------------- | ------------------------------------------ | --------------------------------------------------- |
-| `@dahhouilyas/survey/runtime`      | l'application qui **affiche** les sondages | `SurveyRenderer`, hooks, composants de champ        |
+| `@dahhouilyas/survey/element`      | **tout projet, tout framework, ou aucun**  | Web Component `<edb-survey>`, bundle autonome       |
+| `@dahhouilyas/survey/runtime`      | l'application React                        | `SurveyRenderer`, hooks, composants de champ        |
+| `@dahhouilyas/survey/headless`     | l'hôte qui fournit **sa propre** interface | `createHeadlessSurvey`, abonnement par question     |
 | `@dahhouilyas/survey/builder`      | le **back-office**                         | `SurveyBuilder`, store, éditeurs                    |
-| `@dahhouilyas/survey/core`         | les deux, et le serveur                    | modèle, expressions, validation, `SurveyEngine`     |
+| `@dahhouilyas/survey/core`         | tous, et le serveur                        | modèle, expressions, validation, `SurveyEngine`     |
 | `@dahhouilyas/survey`              | commodité                                  | `core` + `runtime` (jamais le builder)              |
 | `@dahhouilyas/survey/themes/*.css` | —                                          | `default`, `builder`, `compact`, `dark-auto`, `edb` |
 
@@ -96,6 +98,109 @@ reste néanmoins en mémoire, pour être restaurée si l'utilisateur revient en 
 | `components={{ ...defaultFieldComponents, signature: MonChamp }}` | ajoute ou remplace un type                                        |
 | `functions={{ soldeClient: () => solde }}`                        | fonctions d'expression propres à l'hôte                           |
 | `onEngineReady={(engine) => …}`                                   | accès au moteur (navigation programmatique, sauvegarde partielle) |
+
+## Hors de React
+
+Le moteur — modèle, expressions, machine d'état, validation — est du TypeScript pur. React
+n'intervient qu'au rendu. Deux points d'entrée en tirent parti.
+
+### Le Web Component : `<edb-survey>`
+
+Un élément personnalisé est consommé nativement par Vue, Svelte, Angular, Astro, Rails,
+Django… ou par une page HTML sans build. Une balise suffit :
+
+```html
+<script type="module" src="https://unpkg.com/@dahhouilyas/survey/dist/element.js"></script>
+
+<edb-survey src="/api/formulaire.json" locale="fr"></edb-survey>
+
+<script>
+  document
+    .querySelector('edb-survey')
+    .addEventListener('edbs-complete', (e) =>
+      fetch('/api/reponses', { method: 'POST', body: JSON.stringify(e.detail) }),
+    );
+</script>
+```
+
+**41 Ko gzip, tout compris** — moteur, 11 types de questions, thème et rendu. Rien à
+installer, aucun bundler, aucune dépendance à fournir : le bundle embarque
+[Preact](https://preactjs.com) plutôt que React, d'où sa taille.
+
+| Attribut | Rôle                                                               |
+| -------- | ------------------------------------------------------------------ |
+| `src`    | URL d'où charger la définition JSON                                |
+| `locale` | `fr` ou `en`                                                       |
+| `theme`  | `light` ou `dark`                                                  |
+| `mode`   | `edit` ou `display` (lecture seule)                                |
+| `shadow` | `false` pour rendre en DOM clair et appliquer votre propre feuille |
+
+| Propriété     | Rôle                                                 |
+| ------------- | ---------------------------------------------------- |
+| `.definition` | passer la définition comme objet, sans la sérialiser |
+| `.data`       | réponses initiales                                   |
+| `.engine`     | l'instance `SurveyEngine`, pour piloter le sondage   |
+| `.result`     | le `SurveyResult` courant, même avant complétion     |
+
+| Événement       | `detail`                                   |
+| --------------- | ------------------------------------------ |
+| `edbs-change`   | `{ name, value, data }`                    |
+| `edbs-page`     | `{ from, to }`                             |
+| `edbs-complete` | le `SurveyResult` complet                  |
+| `edbs-error`    | échec de chargement ou définition invalide |
+
+**Le thème se pilote depuis la page hôte.** Les variables CSS traversent la frontière du
+shadow DOM : aucun mécanisme supplémentaire n'est nécessaire.
+
+```css
+edb-survey {
+  --edbs-color-primary: #00539b;
+  --edbs-radius-md: 4px;
+}
+```
+
+Dans un framework, c'est aussi court :
+
+```vue
+<!-- Vue -->
+<edb-survey :src="url" @edbs-complete="enregistrer" />
+```
+
+```svelte
+<!-- Svelte -->
+<edb-survey {src} on:edbs-complete={enregistrer} />
+```
+
+### Le mode headless : votre interface, notre moteur
+
+Quand vous voulez rendre vous-même chaque champ — design system maison, React Native,
+terminal, PDF :
+
+```ts
+import { createHeadlessSurvey } from '@dahhouilyas/survey/headless';
+
+const survey = createHeadlessSurvey(definition, { locale: 'fr' });
+
+// Abonnement à UNE question : le rappel n'est déclenché que si l'instantané de
+// cette question a réellement changé — ni valeur, ni visibilité, ni erreur.
+survey.onQuestionChange('email', (q) => {
+  champ.value = String(q.value ?? '');
+  champ.disabled = !q.enabled;
+  champ.hidden = !q.visible;
+  erreur.textContent = q.showErrors ? survey.t(q.errors[0].key) : '';
+});
+
+survey.onComplete((result) => api.post('/reponses', result));
+
+// Arbre des éléments visibles de la page, groupes imbriqués compris.
+for (const noeud of survey.currentPageElements()) {
+  /* … */
+}
+
+survey.destroy(); // coupe tous les abonnements
+```
+
+Aucune dépendance à React n'est tirée par ce point d'entrée.
 
 ## Construire un sondage
 

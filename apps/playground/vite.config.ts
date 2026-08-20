@@ -7,6 +7,15 @@ const packageSrc = (path: string): string => resolve(here, '../../packages/surve
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    // Deux pages : le bac à sable React et la démonstration sans framework.
+    rollupOptions: {
+      input: {
+        index: resolve(here, 'index.html'),
+        vanilla: resolve(here, 'vanilla.html'),
+      },
+    },
+  },
   resolve: {
     // En développement on tape directement dans les sources du package : HMR
     // immédiat, pas de build intermédiaire. L'ordre compte — les alias les plus

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@dahhouilyas/survey — sans framework</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        background: #f2f4f7;
+      }
+      header {
+        padding: 1rem 1.25rem;
+        background: #131820;
+        color: #fff;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      header p {
+        margin: 0.35rem 0 0;
+        font-size: 0.8125rem;
+        color: #a3adbd;
+      }
+      main {
+        max-width: 52rem;
+        margin: 1.5rem auto;
+        padding: 0 1rem;
+      }
+      .carte {
+        background: #fff;
+        border: 1px solid #dde1e8;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .barre {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .barre button,
+      .barre select {
+        padding: 0.35rem 0.6rem;
+        font: inherit;
+        font-size: 0.8125rem;
+        border: 1px solid #bfc6d2;
+        border-radius: 6px;
+        background: #fff;
+        cursor: pointer;
+      }
+      pre {
+        max-height: 20rem;
+        overflow: auto;
+        margin: 1rem 0 0;
+        padding: 1rem;
+        font-size: 0.75rem;
+        background: #131820;
+        color: #d6f0e0;
+        border-radius: 12px;
+      }
+
+      /* Le thème se pilote depuis la page hôte : les variables CSS traversent
+         la frontière du shadow DOM. Aucun mécanisme supplémentaire. */
+      edb-survey {
+        --edbs-color-primary: #00539b;
+        --edbs-radius-md: 4px;
+      }
+      edb-survey.vert {
+        --edbs-color-primary: #0d7048;
+        --edbs-focus-ring-color: rgba(13, 112, 72, 0.35);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>&lt;edb-survey&gt; — sans React, sans bundler</h1>
+      <p>Une balise &lt;script type="module"&gt;, une balise &lt;edb-survey&gt;. Rien d'autre.</p>
+    </header>
+
+    <main>
+      <div class="barre">
+        <button id="theme">Changer la couleur de marque</button>
+        <button id="sombre">Thème sombre</button>
+        <select id="langue">
+          <option value="fr">FR</option>
+          <option value="en">EN</option>
+        </select>
+      </div>
+
+      <div class="carte">
+        <edb-survey id="sondage" locale="fr"></edb-survey>
+      </div>
+
+      <pre id="journal">Les événements du composant s'afficheront ici.</pre>
+    </main>
+
+    <script type="module">
+      // En production : import 'https://unpkg.com/@dahhouilyas/survey/dist/element.js'
+      // Ici on tape dans les sources, pour bénéficier du rechargement à chaud.
+      import '../../packages/survey/src/element/index.ts';
+
+      const sondage = document.getElementById('sondage');
+      const journal = document.getElementById('journal');
+
+      sondage.definition = {
+        schemaVersion: 1,
+        id: 'demo_vanilla',
+        title: { fr: 'Votre avis en trois questions', en: 'Three quick questions' },
+        description: {
+          fr: 'Ce formulaire tourne sans la moindre ligne de React.',
+          en: 'This form runs without a single line of React.',
+        },
+        settings: {
+          locale: 'fr',
+          showProgressBar: 'off',
+          showQuestionNumbers: 'onPage',
+          showPageTitles: false,
+          checkErrorsMode: 'onNextPage',
+        },
+        pages: [
+          {
+            id: 'p1',
+            name: 'page1',
+            elements: [
+              {
+                id: 'q1',
+                name: 'satisfaction',
+                type: 'rating',
+                title: { fr: 'Votre satisfaction globale', en: 'Overall satisfaction' },
+                rateType: 'stars',
+                rateMax: 5,
+                isRequired: true,
+              },
+              {
+                id: 'q2',
+                name: 'motif',
+                type: 'comment',
+                title: { fr: 'Que pouvons-nous améliorer ?', en: 'What can we improve?' },
+                // Logique conditionnelle : évaluée par le moteur embarqué,
+                // sans eval et sans appel réseau.
+                visibleIf: '{satisfaction} <= 3',
+                isRequired: true,
+                rows: 3,
+              },
+              {
+                id: 'q3',
+                name: 'canaux',
+                type: 'checkbox',
+                title: { fr: 'Canaux utilisés', en: 'Channels used' },
+                colCount: 2,
+                choices: [
+                  { value: 'web', text: { fr: 'Site web', en: 'Website' } },
+                  { value: 'app', text: { fr: 'Application', en: 'Mobile app' } },
+                  { value: 'tel', text: { fr: 'Téléphone', en: 'Phone' } },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+
+      const tracer = (nom, detail) => {
+        journal.textContent = `${nom}\n${JSON.stringify(detail, null, 2)}`;
+      };
+
+      sondage.addEventListener('edbs-change', (e) => tracer('edbs-change', e.detail));
+      sondage.addEventListener('edbs-complete', (e) => tracer('edbs-complete', e.detail));
+      sondage.addEventListener('edbs-error', (e) => tracer('edbs-error', e.detail));
+
+      document
+        .getElementById('theme')
+        .addEventListener('click', () => sondage.classList.toggle('vert'));
+
+      document.getElementById('sombre').addEventListener('click', () => {
+        const sombre = sondage.getAttribute('theme') === 'dark';
+        sondage.setAttribute('theme', sombre ? 'light' : 'dark');
+      });
+
+      document
+        .getElementById('langue')
+        .addEventListener('change', (e) => sondage.setAttribute('locale', e.target.value));
+    </script>
+  </body>
+</html>
