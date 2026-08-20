@@ -78,6 +78,10 @@
         "default": "./dist/runtime.cjs"
       }
     },
+    "./element": {
+      "types": "./dist/element.d.ts",
+      "import": "./dist/element.js"
+    },
     "./builder": {
       "import": {
         "types": "./dist/builder.d.ts",
@@ -107,6 +111,9 @@
       ],
       "headless": [
         "./dist/headless.d.ts"
+      ],
+      "element": [
+        "./dist/element.d.ts"
       ]
     }
   },
@@ -115,13 +122,14 @@
   },
   "scripts": {
     "generate": "node scripts/build-styles.mjs",
-    "build": "pnpm generate && tsup && node scripts/copy-styles.mjs",
+    "build": "pnpm generate && pnpm clean && tsup && node scripts/copy-styles.mjs",
     "dev": "tsup --watch",
     "test": "pnpm generate && vitest run",
     "test:watch": "vitest",
     "test:coverage": "pnpm generate && vitest run --coverage",
     "typecheck": "pnpm generate && tsc --noEmit",
-    "verify:pkg": "publint && attw --pack ."
+    "verify:pkg": "publint && attw --pack . --exclude-entrypoints element",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
   },
   "peerDependencies": {
     "react": "^18.2.0",

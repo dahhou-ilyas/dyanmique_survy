@@ -2,10 +2,10 @@ import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import type { PageChangedEvent, SurveyMode, ValueChangedEvent } from '../core/engine/SurveyEngine';
 import { type SurveyEngine } from '../core/engine/SurveyEngine';
-import { parseSurvey } from '../core/schema/zod';
 import { DEFAULT_LOCALE, LOCALES } from '../core/schema/types';
 import type { Locale, SurveyDefinition, SurveyResult } from '../core/schema/types';
 import { SurveyRenderer } from '../runtime/SurveyRenderer';
+import { assertSurveyShape } from './assertSurveyShape';
 import { STYLES } from './styles.generated';
 
 /**
@@ -146,8 +146,9 @@ export class SurveyElement extends HTMLElement {
       if (!reponse.ok) throw new Error(`HTTP ${reponse.status} sur ${src}`);
 
       const brut: unknown = await reponse.json();
-      // La définition vient du réseau : on la valide avant de rendre quoi que ce soit.
-      const definition = parseSurvey(brut);
+      // La définition vient du réseau : on contrôle sa forme avant de rendre quoi
+      // que ce soit. Contrôle structurel et non Zod — voir assertSurveyShape.
+      const definition = assertSurveyShape(brut);
 
       if (jeton !== this.#chargement) return; // un chargement plus récent a pris la main
       this.#definition = definition;
